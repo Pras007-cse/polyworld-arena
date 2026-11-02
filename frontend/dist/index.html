@@ -148,8 +148,8 @@
               <p class="text-[11px] text-slate-300 leading-snug">Articulated 3D rig with Walk, Run, Jump, Wave, Dance, 360° Spin &amp; Bench Sit.</p>
             </div>
             <div class="p-3 rounded-xl bg-slate-900/70 border border-slate-700/70">
-              <div class="text-xs font-bold text-pink-300 mb-0.5">🚌 Tour Bus, Cars, Boats &amp; Rides</div>
-              <p class="text-[11px] text-slate-300 leading-snug">960m×960m world with auto 8-seat Town Travel Bus, drivable Cars &amp; Speedboats, Slanted Overpasses, Seesaws, Carousel &amp; Ferris Wheel!</p>
+              <div class="text-xs font-bold text-pink-300 mb-0.5">🏙️ Dense 1400m×1400m World</div>
+              <p class="text-[11px] text-slate-300 leading-snug">65+ Houses, Sculptures, Tour Bus, Cars, Planes, Helicopter, Boats, Bowling, Basketball, Giant Piano, Treasure Chests &amp; Rides!</p>
             </div>
           </div>
         </div>
@@ -368,6 +368,10 @@
           <option value="95,95">🏎️ Stunt Overpass &amp; Ramps Valley (110, 110)</option>
           <option value="75,-48">✈️ Aether Airport &amp; Runway (75, -55)</option>
           <option value="-60,52">⚽ Town Soccer Stadium (-60, 65)</option>
+          <option value="34,24">🎳 Bowling &amp; Basketball Plaza (34, 28)</option>
+          <option value="-28,20">🎹 Giant Floor Piano &amp; Disco (-28, 22)</option>
+          <option value="220,-220">🏘️ Northeast Suburbia &amp; Towers (220, -220)</option>
+          <option value="-220,220">🏛️ Southwest Geometric Park (-220, 220)</option>
         </select>
 
         <button
@@ -395,6 +399,15 @@
           title="Board &amp; fly the 3D Skyhawk Aeroplane over the entire world"
         >
           ✈️ Fly Plane
+        </button>
+
+        <button
+          type="button"
+          id="btn-spawn-heli"
+          class="px-2.5 py-1.5 rounded-xl glass-panel text-xs font-semibold text-emerald-300 hover:text-white border border-emerald-400/40 transition cursor-pointer"
+          title="Board &amp; fly the 3D Rescue Helicopter (Vertical Hover &amp; Flight)"
+        >
+          🚁 Fly Heli
         </button>
 
         <button
@@ -612,13 +625,13 @@
 
       // ---------------- 2. WORLD CONSTANTS & STATE ----------------
       const WORLD = {
-        MAP_SIZE: 960,
+        MAP_SIZE: 1400,
         GRAVITY: -16.5,
-        WALK_SPEED: 8.8,
-        RUN_SPEED: 16.0,
-        DASH_SPEED: 27.0,
-        JUMP_FORCE: 11.2,
-        JUMP_PAD_FORCE: 24.5
+        WALK_SPEED: 9.0,
+        RUN_SPEED: 16.5,
+        DASH_SPEED: 28.0,
+        JUMP_FORCE: 11.4,
+        JUMP_PAD_FORCE: 25.0
       };
 
       const localId = 'p_' + Math.random().toString(36).substring(2, 9);
@@ -1283,8 +1296,8 @@
       scene.background = new THREE.Color(0x8ecae6);
       scene.fog = new THREE.FogExp2(0x8ecae6, 0.0022);
 
-      const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 950);
-      const p2Camera = new THREE.PerspectiveCamera(60, (window.innerWidth / 2) / window.innerHeight, 0.1, 950);
+      const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1250);
+      const p2Camera = new THREE.PerspectiveCamera(60, (window.innerWidth / 2) / window.innerHeight, 0.1, 1250);
 
       const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
       renderer.setSize(window.innerWidth, window.innerHeight);
@@ -2941,6 +2954,484 @@
         });
       })();
 
+      // ==================== 13. DENSE NEIGHBORHOOD HOUSES, 3D ARCHITECTURAL SHAPES & NEW INTERACTIVE ITEMS ====================
+      const interactivePianoKeys = [];
+      const interactiveTreasureChests = [];
+      const teleportPortals = [];
+      let bowlingGame = null;
+      let basketballGame = null;
+      let discoFloorTiles = [];
+      let rescueHeli = null;
+
+      // Helper to check if a coordinate (x, z) is clear of all roads, bus rings, water, and runways
+      function isSafeForNeighborhoodBuilding(x, z, pad) {
+        const p = pad || 11;
+        // Clear of Cardinal Highways (x=0, z=0) & Diagonal Avenues (|x|=|z|)
+        if (Math.abs(x) < p + 5 || Math.abs(z) < p + 5) return false;
+        if (Math.abs(Math.abs(x) - Math.abs(z)) < p + 4) return false;
+        // Clear of Central Plaza (r < 28) & Ring Roads (r=110, r=194, r=300, r=420)
+        const r = Math.hypot(x, z);
+        if (r < 30) return false;
+        if (Math.abs(r - 110) < p + 6) return false;
+        if (Math.abs(r - 194) < p + 6) return false;
+        if (Math.abs(r - 300) < p + 6) return false;
+        if (Math.abs(r - 420) < p + 6) return false;
+        // Clear of Lake, Canal, Harbor, Airport Runway, Soccer Stadium, Playground, Stunt Valley
+        if (isForbiddenWaterForLand(x, z)) return false;
+        if (x > 52 && x < 98 && z > -95 && z < -15) return false; // Airport Runway
+        if (x > -85 && x < -35 && z > 35 && z < 95) return false; // Soccer Stadium
+        if (x > -135 && x < -85 && z > -140 && z < -80) return false; // Wonderland Rides
+        if (x > 80 && x < 135 && z > 80 && z < 140) return false; // Stunt Ramps
+        if (Math.hypot(x - 65, z) < 34 || Math.hypot(x - 215, z) < 55) return false;
+        if (Math.hypot(x, z + 195) < 48 || Math.hypot(x + 195, z) < 48 || Math.hypot(x, z - 195) < 48) return false;
+        return true;
+      }
+
+      (function populateDenseWorldNeighborhoodsAndShapes() {
+        // 1. Add a 4th Grand Outer Highway Ring at r = 420m + Secondary Grid Streets at x/z = ±250m
+        const outerRing420 = new THREE.Mesh(
+          new THREE.RingGeometry(415, 425, 88),
+          new THREE.MeshStandardMaterial({ color: 0x64748b, roughness: 0.85, side: THREE.DoubleSide })
+        );
+        outerRing420.rotation.x = -Math.PI / 2;
+        outerRing420.position.set(0, 0.028, 0);
+        outerRing420.receiveShadow = true;
+        scene.add(outerRing420);
+
+        const subRoadMat = new THREE.MeshStandardMaterial({ color: 0x94a3b8, roughness: 0.88 });
+        [-250, 250].forEach(function (offset) {
+          const rNS = new THREE.Mesh(new THREE.PlaneGeometry(6.5, 900), subRoadMat);
+          rNS.rotation.x = -Math.PI / 2;
+          rNS.position.set(offset, 0.024, 0);
+          const rEW = new THREE.Mesh(new THREE.PlaneGeometry(900, 6.5), subRoadMat);
+          rEW.rotation.x = -Math.PI / 2;
+          rEW.position.set(0, 0.024, offset);
+          scene.add(rNS, rEW);
+        });
+
+        // 2. Procedurally populate 56 Diverse Neighborhood Houses, Modern Lofts, Pagodas & Villas with Gardens!
+        const wallPalette = [0xfef08a, 0xbae6fd, 0xfecdd3, 0xa7f3d0, 0xe9d5ff, 0xfed7aa, 0xe2e8f0, 0x99f6e4];
+        const roofPalette = [0x991b1b, 0x1e3a8a, 0x065f46, 0x581c87, 0x7c2d12, 0x0f172a, 0xb45309, 0xbe185d];
+
+        const houseGridCoords = [];
+        const rings = [52, 82, 138, 168, 225, 272, 345];
+        rings.forEach(function (rad, rIdx) {
+          const count = 8 + rIdx * 4;
+          for (let i = 0; i < count; i++) {
+            const ang = (i / count) * Math.PI * 2 + 0.19 * (rIdx + 1);
+            const hx = Math.round(Math.cos(ang) * rad);
+            const hz = Math.round(Math.sin(ang) * rad);
+            if (Math.abs(hx - 250) < 12 || Math.abs(hx + 250) < 12 || Math.abs(hz - 250) < 12 || Math.abs(hz + 250) < 12) continue;
+            if (isSafeForNeighborhoodBuilding(hx, hz, 11)) {
+              houseGridCoords.push({ x: hx, z: hz, ang: ang, idx: houseGridCoords.length });
+            }
+          }
+        });
+
+        houseGridCoords.forEach(function (hc) {
+          const i = hc.idx;
+          const w = 6.5 + (i % 4) * 1.2;
+          const d = 6.0 + ((i + 1) % 3) * 1.2;
+          const h = 4.8 + (i % 5) * 1.6;
+          const bGroup = createBuilding({
+            x: hc.x,
+            z: hc.z,
+            rot: -hc.ang + Math.PI / 2,
+            color: wallPalette[i % wallPalette.length],
+            roofColor: roofPalette[i % roofPalette.length],
+            w: w,
+            d: d,
+            h: h
+          });
+
+          // Add glowing front windows, door, and garden flowerbed to each neighborhood house
+          const winMat = new THREE.MeshBasicMaterial({ color: 0xfef9c3 });
+          const doorMat = new THREE.MeshStandardMaterial({ color: 0x451a03 });
+          const door = new THREE.Mesh(new THREE.BoxGeometry(1.3, 2.2, 0.15), doorMat);
+          door.position.set(0, 1.1, d / 2 + 0.05);
+          const winL = new THREE.Mesh(new THREE.BoxGeometry(1.1, 1.1, 0.12), winMat);
+          winL.position.set(-w * 0.26, 2.2, d / 2 + 0.05);
+          const winR = new THREE.Mesh(new THREE.BoxGeometry(1.1, 1.1, 0.12), winMat);
+          winR.position.set(w * 0.26, 2.2, d / 2 + 0.05);
+          bGroup.add(door, winL, winR);
+
+          // Decorative yard tree or bush beside the house
+          const yardTree = createPineTree(0.65 + (i % 3) * 0.15);
+          yardTree.position.set(w / 2 + 1.8, 0, 1.5);
+          bGroup.add(yardTree);
+
+          scene.add(bGroup);
+        });
+
+        // 3. Add 60+ Colorful 3D Geometric Sculptures, Rotating Polyhedrons, Crystal Towers, Arches & Gazebos across open spaces!
+        const shapeColors = [0x06b6d4, 0xf43f5e, 0xa855f7, 0xfacc15, 0x10b981, 0x3b82f6, 0xf97316];
+        const sculptureRings = [38, 96, 152, 212, 260, 325, 385];
+        const spinningShapes = [];
+
+        sculptureRings.forEach(function (rad, sIdx) {
+          const num = 8 + sIdx * 2;
+          for (let j = 0; j < num; j++) {
+            const ang = (j / num) * Math.PI * 2 + 0.37 * (sIdx + 1);
+            const sx = Math.round(Math.cos(ang) * rad);
+            const sz = Math.round(Math.sin(ang) * rad);
+            if (!isSafeForNeighborhoodBuilding(sx, sz, 7)) continue;
+
+            const sg = new THREE.Group();
+            sg.position.set(sx, 0, sz);
+            const col = shapeColors[(j + sIdx) % shapeColors.length];
+
+            // Pedestal Plinth
+            const plinth = new THREE.Mesh(
+              new THREE.CylinderGeometry(1.6, 2.0, 0.8, 8),
+              new THREE.MeshStandardMaterial({ color: 0x334155, roughness: 0.6 })
+            );
+            plinth.position.y = 0.4;
+            sg.add(plinth);
+
+            const shapeType = (j + sIdx) % 5;
+            let shapeMesh;
+            const mat = new THREE.MeshStandardMaterial({
+              color: col,
+              emissive: col,
+              emissiveIntensity: 0.35,
+              metalness: 0.7,
+              roughness: 0.2
+            });
+
+            if (shapeType === 0) {
+              shapeMesh = new THREE.Mesh(new THREE.TorusKnotGeometry(1.15, 0.32, 48, 8), mat);
+              shapeMesh.position.y = 2.8;
+            } else if (shapeType === 1) {
+              shapeMesh = new THREE.Mesh(new THREE.IcosahedronGeometry(1.5, 0), mat);
+              shapeMesh.position.y = 2.6;
+            } else if (shapeType === 2) {
+              shapeMesh = new THREE.Mesh(new THREE.OctahedronGeometry(1.6, 0), mat);
+              shapeMesh.position.y = 2.7;
+            } else if (shapeType === 3) {
+              shapeMesh = new THREE.Mesh(new THREE.TorusGeometry(1.4, 0.35, 12, 24), mat);
+              shapeMesh.position.y = 2.6;
+            } else {
+              shapeMesh = new THREE.Mesh(new THREE.ConeGeometry(1.4, 3.2, 6), mat);
+              shapeMesh.position.y = 2.4;
+            }
+            shapeMesh.castShadow = true;
+            sg.add(shapeMesh);
+            scene.add(sg);
+            spinningShapes.push(shapeMesh);
+          }
+        });
+
+        animatedProps.push(function (time, dt) {
+          for (let i = 0; i < spinningShapes.length; i++) {
+            spinningShapes[i].rotation.y += dt * 1.2;
+            spinningShapes[i].rotation.x = Math.sin(time * 1.5 + i) * 0.35;
+          }
+        });
+
+        // 4. Interactive Giant 3D Walk-On Floor Piano (at Central Plaza West-South: x = -28, z = 22)
+        // Step, run, or jump across the 8 giant glowing keys to play a real C-Major musical scale!
+        const pianoGroup = new THREE.Group();
+        pianoGroup.position.set(-28, 0, 22);
+        const pianoBase = new THREE.Mesh(
+          new THREE.BoxGeometry(14.5, 0.2, 4.8),
+          new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.5 })
+        );
+        pianoBase.position.y = 0.1;
+        pianoGroup.add(pianoBase);
+
+        const noteFreqs = [261.63, 293.66, 329.63, 349.23, 392.00, 440.00, 493.88, 523.25];
+        const noteNames = ['C4', 'D4', 'E4', 'F4', 'G4', 'A4', 'B4', 'C5'];
+        const keyColors = [0xef4444, 0xf97316, 0xfacc15, 0x22c55e, 0x06b6d4, 0x3b82f6, 0x8b5cf6, 0xec4899];
+
+        for (let k = 0; k < 8; k++) {
+          const kx = -5.6 + k * 1.6;
+          const keyMat = new THREE.MeshStandardMaterial({
+            color: 0xffffff,
+            emissive: keyColors[k],
+            emissiveIntensity: 0.25,
+            roughness: 0.2
+          });
+          const keyMesh = new THREE.Mesh(new THREE.BoxGeometry(1.42, 0.28, 4.0), keyMat);
+          keyMesh.position.set(kx, 0.26, 0.2);
+          keyMesh.castShadow = true;
+          pianoGroup.add(keyMesh);
+
+          // Black sharp key accent
+          if (k !== 2 && k !== 6 && k < 7) {
+            const blackKey = new THREE.Mesh(
+              new THREE.BoxGeometry(0.75, 0.42, 2.2),
+              new THREE.MeshStandardMaterial({ color: 0x090d16, roughness: 0.3 })
+            );
+            blackKey.position.set(kx + 0.8, 0.36, -0.6);
+            pianoGroup.add(blackKey);
+          }
+
+          interactivePianoKeys.push({
+            worldX: -28 + kx,
+            worldZ: 22.2,
+            mesh: keyMesh,
+            mat: keyMat,
+            baseColor: keyColors[k],
+            freq: noteFreqs[k],
+            note: noteNames[k],
+            cooldown: 0
+          });
+        }
+        scene.add(pianoGroup);
+
+        // 5. Interactive 3D 10-Pin Bowling Alley Lane (at x = 34, z = 28)
+        // Roll or kick the Bowling Ball down the hardwood lane to knock down all 10 3D Pins!
+        const bowlGroup = new THREE.Group();
+        bowlGroup.position.set(34, 0, 28);
+        const laneWood = new THREE.Mesh(
+          new THREE.BoxGeometry(4.6, 0.18, 24),
+          new THREE.MeshStandardMaterial({ color: 0xd97706, roughness: 0.25, metalness: 0.1 })
+        );
+        laneWood.position.set(0, 0.09, 8);
+        laneWood.receiveShadow = true;
+        bowlGroup.add(laneWood);
+
+        const gutterMat = new THREE.MeshStandardMaterial({ color: 0x334155 });
+        [-2.45, 2.45].forEach(function (gx) {
+          const rail = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.4, 24), gutterMat);
+          rail.position.set(gx, 0.2, 8);
+          bowlGroup.add(rail);
+        });
+        scene.add(bowlGroup);
+
+        const bowlBallMesh = new THREE.Mesh(
+          new THREE.SphereGeometry(0.62, 16, 16),
+          new THREE.MeshStandardMaterial({ color: 0xec4899, metalness: 0.6, roughness: 0.15 })
+        );
+        bowlBallMesh.position.set(34, 0.72, 20);
+        bowlBallMesh.castShadow = true;
+        scene.add(bowlBallMesh);
+
+        const pins = [];
+        const pinMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.3 });
+        const pinRows = [
+          [{ x: 0, z: 34 }],
+          [{ x: -0.55, z: 35 }, { x: 0.55, z: 35 }],
+          [{ x: -1.1, z: 36 }, { x: 0, z: 36 }, { x: 1.1, z: 36 }],
+          [{ x: -1.65, z: 37 }, { x: -0.55, z: 37 }, { x: 0.55, z: 37 }, { x: 1.65, z: 37 }]
+        ];
+        pinRows.forEach(function (row) {
+          row.forEach(function (pCoord) {
+            const pMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.24, 1.1, 10), pinMat);
+            pMesh.position.set(34 + pCoord.x, 0.65, pCoord.z);
+            pMesh.castShadow = true;
+            scene.add(pMesh);
+            pins.push({
+              mesh: pMesh,
+              homeX: 34 + pCoord.x,
+              homeZ: pCoord.z,
+              knocked: false,
+              vel: new THREE.Vector3()
+            });
+          });
+        });
+
+        bowlingGame = {
+          ballMesh: bowlBallMesh,
+          ballPos: bowlBallMesh.position,
+          ballVel: new THREE.Vector3(),
+          pins: pins,
+          resetTimer: 0
+        };
+
+        // 6. Interactive 3D Basketball Court & Hoop (at x = -34, z = 36)
+        const bballGroup = new THREE.Group();
+        bballGroup.position.set(-34, 0, 36);
+        const courtFloor = new THREE.Mesh(
+          new THREE.BoxGeometry(12, 0.14, 16),
+          new THREE.MeshStandardMaterial({ color: 0xb45309, roughness: 0.5 })
+        );
+        courtFloor.position.y = 0.07;
+        courtFloor.receiveShadow = true;
+        bballGroup.add(courtFloor);
+
+        const hoopPole = new THREE.Mesh(
+          new THREE.CylinderGeometry(0.16, 0.2, 5.2, 10),
+          new THREE.MeshStandardMaterial({ color: 0x1e293b, metalness: 0.7 })
+        );
+        hoopPole.position.set(0, 2.6, 7.2);
+        const backboard = new THREE.Mesh(
+          new THREE.BoxGeometry(2.6, 1.8, 0.15),
+          new THREE.MeshStandardMaterial({ color: 0xf8fafc })
+        );
+        backboard.position.set(0, 4.8, 6.8);
+        const rim = new THREE.Mesh(
+          new THREE.TorusGeometry(0.55, 0.06, 8, 20),
+          new THREE.MeshStandardMaterial({ color: 0xf97316, emissive: 0xea580c, emissiveIntensity: 0.4 })
+        );
+        rim.rotation.x = Math.PI / 2;
+        rim.position.set(0, 4.3, 6.1);
+        bballGroup.add(hoopPole, backboard, rim);
+        scene.add(bballGroup);
+
+        const bballMesh = new THREE.Mesh(
+          new THREE.SphereGeometry(0.45, 16, 16),
+          new THREE.MeshStandardMaterial({ color: 0xf97316, roughness: 0.4 })
+        );
+        bballMesh.position.set(-34, 0.55, 33);
+        bballMesh.castShadow = true;
+        scene.add(bballMesh);
+
+        basketballGame = {
+          mesh: bballMesh,
+          pos: bballMesh.position,
+          vel: new THREE.Vector3(),
+          rimPos: new THREE.Vector3(-34, 4.3, 42.1),
+          shotActive: false
+        };
+
+        // 7. Interactive 3D Treasure Chests (14 Golden Chests placed across neighborhoods & landmarks!)
+        const chestCoords = [
+          { x: 24, z: 8 }, { x: -24, z: 8 },
+          { x: 42, z: -36 }, { x: -42, z: -36 },
+          { x: 48, z: 42 }, { x: -82, z: 32 },
+          { x: 82, z: -82 }, { x: -82, z: -62 },
+          { x: 135, z: -38 }, { x: -135, z: 38 },
+          { x: 215, z: -215 }, { x: -215, z: 215 },
+          { x: 215, z: 215 }, { x: -215, z: -215 }
+        ];
+        const chestWoodMat = new THREE.MeshStandardMaterial({ color: 0x92400e, roughness: 0.6 });
+        const chestGoldMat = new THREE.MeshStandardMaterial({ color: 0xfacc15, metalness: 0.85, roughness: 0.2, emissive: 0xb45309, emissiveIntensity: 0.3 });
+
+        chestCoords.forEach(function (cc, idx) {
+          const cg = new THREE.Group();
+          cg.position.set(cc.x, 0, cc.z);
+          const box = new THREE.Mesh(new THREE.BoxGeometry(1.4, 0.8, 1.0), chestWoodMat);
+          box.position.y = 0.4;
+          box.castShadow = true;
+          const trim = new THREE.Mesh(new THREE.BoxGeometry(1.44, 0.16, 1.04), chestGoldMat);
+          trim.position.y = 0.72;
+
+          const lidPivot = new THREE.Group();
+          lidPivot.position.set(0, 0.8, -0.5);
+          const lid = new THREE.Mesh(new THREE.BoxGeometry(1.4, 0.45, 1.0), chestWoodMat);
+          lid.position.set(0, 0.22, 0.5);
+          const lock = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.3, 0.12), chestGoldMat);
+          lock.position.set(0, 0.1, 1.02);
+          lidPivot.add(lid, lock);
+
+          cg.add(box, trim, lidPivot);
+          scene.add(cg);
+
+          interactiveTreasureChests.push({
+            id: 'chest_' + (idx + 1),
+            position: new THREE.Vector3(cc.x, 0, cc.z),
+            lidPivot: lidPivot,
+            opened: false,
+            timer: 0
+          });
+        });
+
+        // 8. Interactive Color-Changing Disco Dance Floor (North Plaza: x = 0, z = -20)
+        const discoGroup = new THREE.Group();
+        discoGroup.position.set(0, 0.06, -20);
+        for (let r = 0; r < 4; r++) {
+          for (let c = 0; c < 4; c++) {
+            const tMat = new THREE.MeshStandardMaterial({
+              color: shapeColors[(r * 4 + c) % shapeColors.length],
+              emissive: shapeColors[(r * 4 + c) % shapeColors.length],
+              emissiveIntensity: 0.55,
+              roughness: 0.2
+            });
+            const tile = new THREE.Mesh(new THREE.BoxGeometry(1.7, 0.12, 1.7), tMat);
+            tile.position.set((c - 1.5) * 1.8, 0, (r - 1.5) * 1.8);
+            discoGroup.add(tile);
+            discoFloorTiles.push(tMat);
+          }
+        }
+        scene.add(discoGroup);
+
+        // 9. Paired Teleport Portal Gates connecting Plaza to Outer Suburbs
+        const portalPairs = [
+          { x: 26, z: 0, targetX: 220, targetZ: -220, label: 'Northeast Suburbia' },
+          { x: 225, z: -220, targetX: 22, targetZ: 0, label: 'Central Plaza' },
+          { x: -26, z: 0, targetX: -220, targetZ: 220, label: 'Southwest Geometric Park' },
+          { x: -225, z: 220, targetX: -22, targetZ: 0, label: 'Central Plaza' }
+        ];
+        portalPairs.forEach(function (pp) {
+          const pg = new THREE.Group();
+          pg.position.set(pp.x, 0, pp.z);
+          const ring = new THREE.Mesh(
+            new THREE.TorusGeometry(2.0, 0.22, 12, 28),
+            new THREE.MeshStandardMaterial({ color: 0xc084fc, emissive: 0x9333ea, emissiveIntensity: 0.85 })
+          );
+          ring.position.y = 2.2;
+          pg.add(ring);
+          scene.add(pg);
+          teleportPortals.push({
+            position: new THREE.Vector3(pp.x, 0, pp.z),
+            targetX: pp.targetX,
+            targetZ: pp.targetZ,
+            label: pp.label,
+            ring: ring
+          });
+        });
+
+        // 10. Controllable 3D Rescue Helicopter on Helipad (x: 28, z: -28)
+        const heliPad = new THREE.Mesh(
+          new THREE.CylinderGeometry(5.2, 5.5, 0.22, 24),
+          new THREE.MeshStandardMaterial({ color: 0x334155, roughness: 0.7 })
+        );
+        heliPad.position.set(28, 0.11, -28);
+        scene.add(heliPad);
+
+        const hg = new THREE.Group();
+        hg.position.set(28, 0.22, -28);
+        const hBodyGroup = new THREE.Group();
+        hg.add(hBodyGroup);
+
+        const hMat = new THREE.MeshStandardMaterial({ color: 0x10b981, metalness: 0.4, roughness: 0.3 });
+        const hDark = new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.6 });
+        const hGlass = new THREE.MeshStandardMaterial({ color: 0x7dd3fc, transparent: true, opacity: 0.55 });
+
+        const cabin = new THREE.Mesh(new THREE.BoxGeometry(2.2, 1.8, 3.6), hMat);
+        cabin.position.y = 1.4;
+        cabin.castShadow = true;
+        const bubble = new THREE.Mesh(new THREE.SphereGeometry(1.15, 16, 12), hGlass);
+        bubble.position.set(0, 1.45, 1.3);
+        const tailBoom = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.45, 4.2, 8), hMat);
+        tailBoom.rotation.x = Math.PI / 2;
+        tailBoom.position.set(0, 1.5, -3.4);
+
+        // Landing Skids
+        [-0.95, 0.95].forEach(function (sx) {
+          const skid = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.08, 3.8, 8), hDark);
+          skid.rotation.x = Math.PI / 2;
+          skid.position.set(sx, 0.15, 0);
+          hBodyGroup.add(skid);
+        });
+
+        // Top Main Rotor & Tail Rotor
+        const topRotor = new THREE.Group();
+        topRotor.position.set(0, 2.45, 0);
+        const rBlade1 = new THREE.Mesh(new THREE.BoxGeometry(7.8, 0.06, 0.35), hDark);
+        const rBlade2 = new THREE.Mesh(new THREE.BoxGeometry(0.35, 0.06, 7.8), hDark);
+        topRotor.add(rBlade1, rBlade2);
+
+        const tailRotor = new THREE.Mesh(new THREE.BoxGeometry(0.08, 1.5, 0.2), hDark);
+        tailRotor.position.set(0.28, 1.5, -5.3);
+
+        hBodyGroup.add(cabin, bubble, tailBoom, topRotor, tailRotor);
+        scene.add(hg);
+
+        rescueHeli = {
+          name: 'Aether Rescue Helicopter',
+          mesh: hg,
+          bodyGroup: hBodyGroup,
+          topRotor: topRotor,
+          tailRotor: tailRotor,
+          position: hg.position,
+          rotationYaw: 0,
+          speed: 0,
+          pilot: null
+        };
+      })();
+
       // Street Lamps
       [
         { x: -5, z: 12 }, { x: 5, z: 12 },
@@ -3180,6 +3671,13 @@
           info.gondola.rider = null;
           char.position.set(info.ref.position.x, 0, info.ref.position.z + 6.0);
           showToast('🎡 Stepped off the Giant Ferris Wheel');
+        } else if (info.kind === 'heli' && info.ref) {
+          info.ref.pilot = null;
+          info.ref.speed = 0;
+          info.ref.bodyGroup.rotation.set(0, 0, 0);
+          char.position.set(info.ref.position.x + 2.8, Math.max(0, info.ref.position.y), info.ref.position.z);
+          char.isGrounded = (char.position.y <= getSlopeHeight(char.position.x, char.position.z) + 0.1);
+          showToast('🚁 Exited ' + info.ref.name);
         } else if (info.kind === 'plane' && info.ref) {
           info.ref.pilot = null;
           info.ref.speed = 0;
@@ -3228,6 +3726,16 @@
         // 1. Check Town Travel Bus (within 8.5m)
         if (p.distanceTo(townBus.position) < 8.5) {
           boardTownBus(char);
+          return;
+        }
+
+        // 1a. Check Controllable 3D Rescue Helicopter (within 6.5m)
+        if (rescueHeli && !rescueHeli.pilot && p.distanceTo(rescueHeli.position) < 6.5) {
+          rescueHeli.pilot = char;
+          char.mountedInfo = { kind: 'heli', ref: rescueHeli };
+          char.currentAnimation = 'sit';
+          sound.playCrown();
+          showToast('🚁 Flying ' + rescueHeli.name + '! Space: Ascend Up, Shift: Descend, WASD: Fly & Turn, E: Exit');
           return;
         }
 
@@ -3334,7 +3842,26 @@
           return;
         }
 
-        showToast('💡 Walk near any Car, Speedboat, Tour Bus, Seesaw, Carousel, Swing, or Ferris Wheel and press [E]!');
+        // 8. Check Basketball Shot (within 6.0m of Basketball)
+        if (basketballGame && p.distanceTo(basketballGame.pos) < 6.0) {
+          basketballGame.pos.set(-34, 2.0, 34);
+          basketballGame.vel.set(0, 10.5, 8.2);
+          basketballGame.shotActive = true;
+          sound.playJump();
+          showToast('🏀 Launched a 3-Point Jump Shot toward the Hoop!');
+          return;
+        }
+
+        // 9. Check Bowling Ball Roll (within 6.0m of Bowling Ball)
+        if (bowlingGame && p.distanceTo(bowlingGame.ballPos) < 6.0) {
+          bowlingGame.ballPos.set(34, 0.72, 21);
+          bowlingGame.ballVel.set((Math.random() - 0.5) * 0.8, 0, 24.0);
+          sound.playDash();
+          showToast('🎳 Rolled the Bowling Ball down the lane!');
+          return;
+        }
+
+        showToast('💡 Walk near any Car, Plane, Helicopter, Boat, Bus, Seesaw, Carousel, Bowling, Basketball, or Piano & press [E]!');
       }
 
       // ---------------- 7. MULTI-TRANSPORT NETWORKING (Socket.IO + BroadcastChannel) ----------------
@@ -4104,6 +4631,22 @@
         player1.currentAnimation = 'sit';
         sound.playHorn();
         showToast('🏎️ Driving ' + car.name + '! Steer with WASD, Shift/F for Nitro Boost, E to Exit');
+      });
+
+      document.getElementById('btn-spawn-heli').addEventListener('click', function () {
+        if (player1.mountedInfo && player1.mountedInfo.kind === 'heli') {
+          unmountCharacter(player1);
+          return;
+        }
+        if (player1.mountedInfo) unmountCharacter(player1);
+        if (rescueHeli) {
+          if (rescueHeli.pilot && rescueHeli.pilot !== player1) rescueHeli.pilot.mountedInfo = null;
+          rescueHeli.pilot = player1;
+          player1.mountedInfo = { kind: 'heli', ref: rescueHeli };
+          player1.currentAnimation = 'sit';
+          sound.playCrown();
+          showToast('🚁 Flying ' + rescueHeli.name + '! Space: Ascend Vertically, Shift: Descend, WASD: Fly, E: Exit');
+        }
       });
 
       document.getElementById('btn-spawn-plane').addEventListener('click', function () {
@@ -4878,6 +5421,190 @@
               gon.rider.mesh.position.copy(gon.rider.position);
             }
           }
+        }
+
+        // Update Controllable 3D Rescue Helicopter
+        if (rescueHeli) {
+          if (rescueHeli.pilot) {
+            const inp = (rescueHeli.pilot === player2) ? p2Input : p1Input;
+            rescueHeli.topRotor.rotation.y += delta * 24.0;
+            rescueHeli.tailRotor.rotation.x += delta * 28.0;
+
+            const maxSpd = inp.dash ? 36.0 : 24.0;
+            if (inp.forward) rescueHeli.speed = THREE.MathUtils.lerp(rescueHeli.speed, maxSpd, delta * 3.5);
+            else if (inp.backward) rescueHeli.speed = THREE.MathUtils.lerp(rescueHeli.speed, -12.0, delta * 3.5);
+            else rescueHeli.speed = THREE.MathUtils.lerp(rescueHeli.speed, 0, delta * 4.0);
+
+            if (inp.left) rescueHeli.rotationYaw += delta * 1.9;
+            if (inp.right) rescueHeli.rotationYaw -= delta * 1.9;
+
+            let vY = 0;
+            if (inp.jump) vY = 14.0;
+            else if (inp.sprint) vY = -12.0;
+
+            rescueHeli.position.x += Math.sin(rescueHeli.rotationYaw) * rescueHeli.speed * delta;
+            rescueHeli.position.z += Math.cos(rescueHeli.rotationYaw) * rescueHeli.speed * delta;
+            rescueHeli.position.y = THREE.MathUtils.clamp(
+              rescueHeli.position.y + vY * delta,
+              getSlopeHeight(rescueHeli.position.x, rescueHeli.position.z) + 0.22,
+              88.0
+            );
+
+            rescueHeli.mesh.rotation.y = rescueHeli.rotationYaw;
+            rescueHeli.bodyGroup.rotation.x = THREE.MathUtils.lerp(rescueHeli.bodyGroup.rotation.x, rescueHeli.speed * 0.01, delta * 6);
+
+            rescueHeli.pilot.position.set(rescueHeli.position.x, rescueHeli.position.y + 1.1, rescueHeli.position.z);
+            rescueHeli.pilot.mesh.position.copy(rescueHeli.pilot.position);
+            rescueHeli.pilot.rotationYaw = rescueHeli.rotationYaw;
+            rescueHeli.pilot.mesh.rotation.y = rescueHeli.rotationYaw;
+            checkCharacterObjectives(rescueHeli.pilot, false);
+          } else {
+            rescueHeli.topRotor.rotation.y += delta * 2.0;
+          }
+        }
+
+        // Update Interactive Giant Floor Piano Keys
+        for (let k = 0; k < interactivePianoKeys.length; k++) {
+          const pk = interactivePianoKeys[k];
+          if (pk.cooldown > 0) pk.cooldown -= delta;
+          const dx = Math.abs(player1.position.x - pk.worldX);
+          const dz = Math.abs(player1.position.z - pk.worldZ);
+          if (dx < 0.72 && dz < 2.0 && player1.position.y < 1.2) {
+            pk.mesh.position.y = 0.16;
+            pk.mat.emissiveIntensity = 0.95;
+            if (pk.cooldown <= 0) {
+              pk.cooldown = 0.32;
+              sound.playTone(pk.freq, 0.28, 'triangle', 0.11);
+              player1.score += 2;
+              player1.updateNameplate();
+            }
+          } else {
+            pk.mesh.position.y = THREE.MathUtils.lerp(pk.mesh.position.y, 0.26, delta * 10);
+            pk.mat.emissiveIntensity = THREE.MathUtils.lerp(pk.mat.emissiveIntensity, 0.25, delta * 6);
+          }
+        }
+
+        // Update Interactive 10-Pin Bowling Alley
+        if (bowlingGame) {
+          const bDist = Math.hypot(bowlingGame.ballPos.x - player1.position.x, bowlingGame.ballPos.z - player1.position.z);
+          if (bDist < 1.8 && bowlingGame.ballVel.lengthSq() < 1.0) {
+            bowlingGame.ballVel.set((bowlingGame.ballPos.x - player1.position.x) * 3.0, 0, 22.0);
+            sound.playDash();
+          }
+          bowlingGame.ballPos.addScaledVector(bowlingGame.ballVel, delta);
+          bowlingGame.ballVel.multiplyScalar(1 - delta * 0.6);
+          bowlingGame.ballMesh.rotation.x += bowlingGame.ballVel.z * delta;
+
+          let knockedCount = 0;
+          for (let p = 0; p < bowlingGame.pins.length; p++) {
+            const pin = bowlingGame.pins[p];
+            if (!pin.knocked) {
+              const pd = Math.hypot(bowlingGame.ballPos.x - pin.mesh.position.x, bowlingGame.ballPos.z - pin.mesh.position.z);
+              if (pd < 0.95) {
+                pin.knocked = true;
+                pin.vel.set((Math.random() - 0.5) * 8, 4 + Math.random() * 4, 8 + Math.random() * 6);
+                sound.playJump();
+              }
+            } else {
+              knockedCount++;
+              pin.mesh.position.addScaledVector(pin.vel, delta);
+              pin.vel.y += WORLD.GRAVITY * delta;
+              if (pin.mesh.position.y < 0.25) {
+                pin.mesh.position.y = 0.25;
+                pin.vel.set(0, 0, 0);
+              }
+              pin.mesh.rotation.x += delta * 6;
+              pin.mesh.rotation.z += delta * 5;
+            }
+          }
+
+          if (knockedCount > 0 || bowlingGame.ballPos.z > 40) {
+            bowlingGame.resetTimer += delta;
+            if (bowlingGame.resetTimer > 3.2) {
+              bowlingGame.resetTimer = 0;
+              player1.score += knockedCount * 3;
+              player1.updateNameplate();
+              showToast('🎳 Knocked down ' + knockedCount + '/10 Bowling Pins! (+' + (knockedCount * 3) + ' XP)');
+              bowlingGame.ballPos.set(34, 0.72, 20);
+              bowlingGame.ballVel.set(0, 0, 0);
+              for (let p = 0; p < bowlingGame.pins.length; p++) {
+                const pin = bowlingGame.pins[p];
+                pin.knocked = false;
+                pin.vel.set(0, 0, 0);
+                pin.mesh.position.set(pin.homeX, 0.65, pin.homeZ);
+                pin.mesh.rotation.set(0, 0, 0);
+              }
+            }
+          }
+        }
+
+        // Update Interactive Basketball Court & Hoop
+        if (basketballGame) {
+          const dBall = Math.hypot(basketballGame.pos.x - player1.position.x, basketballGame.pos.z - player1.position.z);
+          if (dBall < 1.6 && !basketballGame.shotActive) {
+            basketballGame.vel.set((-34 - basketballGame.pos.x) * 1.2, 10.2, (42.1 - basketballGame.pos.z) * 1.15);
+            basketballGame.shotActive = true;
+            sound.playJump();
+          }
+          if (basketballGame.shotActive) {
+            basketballGame.vel.y += WORLD.GRAVITY * delta;
+            basketballGame.pos.addScaledVector(basketballGame.vel, delta);
+            if (basketballGame.pos.distanceTo(basketballGame.rimPos) < 1.15) {
+              spawnBurst(basketballGame.rimPos.clone(), 0xf97316);
+              sound.playCrown();
+              player1.score += 20;
+              player1.updateNameplate();
+              showToast('🏀 SWISH! Basketball Hoop Scored! (+20 XP)');
+              basketballGame.pos.set(-34, 0.55, 33);
+              basketballGame.vel.set(0, 0, 0);
+              basketballGame.shotActive = false;
+            } else if (basketballGame.pos.y <= 0.45) {
+              basketballGame.pos.set(-34, 0.55, 33);
+              basketballGame.vel.set(0, 0, 0);
+              basketballGame.shotActive = false;
+            }
+          }
+        }
+
+        // Update Interactive Treasure Chests
+        for (let c = 0; c < interactiveTreasureChests.length; c++) {
+          const ch = interactiveTreasureChests[c];
+          if (!ch.opened) {
+            if (player1.position.distanceTo(ch.position) < 2.6) {
+              ch.opened = true;
+              ch.timer = 15.0;
+              spawnBurst(ch.position.clone().add(new THREE.Vector3(0, 1.2, 0)), 0xfacc15);
+              sound.playCrown();
+              player1.score += 35;
+              player1.level = Math.max(1, Math.floor(player1.score / 100) + 1);
+              player1.updateNameplate();
+              showToast('💰 Opened a Neighborhood Treasure Chest! (+35 XP)');
+            }
+          } else {
+            ch.lidPivot.rotation.x = THREE.MathUtils.lerp(ch.lidPivot.rotation.x, -1.35, delta * 8);
+            ch.timer -= delta;
+            if (ch.timer <= 0) {
+              ch.opened = false;
+              ch.lidPivot.rotation.x = 0;
+            }
+          }
+        }
+
+        // Update Teleport Portals & Disco Floor
+        for (let p = 0; p < teleportPortals.length; p++) {
+          const pt = teleportPortals[p];
+          pt.ring.rotation.z += delta * 2.5;
+          if (player1.position.distanceTo(pt.position) < 2.1 && (!player1.portalCooldown || player1.portalCooldown <= 0)) {
+            player1.portalCooldown = 3.0;
+            player1.position.set(pt.targetX, 1.0, pt.targetZ);
+            sound.playCrown();
+            showToast('🌀 Warped through Portal to ' + pt.label + '!');
+          }
+        }
+        if (player1.portalCooldown > 0) player1.portalCooldown -= delta;
+
+        for (let d = 0; d < discoFloorTiles.length; d++) {
+          discoFloorTiles[d].emissiveIntensity = 0.35 + Math.sin(elapsed * 5 + d) * 0.35;
         }
 
         // Update Animated World Props

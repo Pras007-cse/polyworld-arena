@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.WORLD_CONSTANTS = void 0;
 exports.WORLD_CONSTANTS = {
-    MAP_SIZE: 960,
+    MAP_SIZE: 1400,
     PLAZA_RADIUS: 24,
     LAKE_RADIUS: 26,
     GRAVITY: -25,
