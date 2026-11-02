@@ -1,0 +1,22 @@
+{
+  "name": "polyworld-arena",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Deployable 3D Multiplayer Social & Arena Web Game (Three.js + Socket.IO + BroadcastChannel + Split-Screen)",
+  "scripts": {
+    "dev": "npm run dev --prefix frontend",
+    "build": "npm run build --prefix frontend && npm run build --prefix backend",
+    "start": "npm run start --prefix backend",
+    "backend:dev": "npm run dev --prefix backend",
+    "backend:build": "npm run build --prefix backend"
+  },
+  "keywords": [
+    "threejs",
+    "multiplayer",
+    "3d-game",
+    "socket-io",
+    "react",
+    "typescript"
+  ],
+  "license": "MIT"
+}
