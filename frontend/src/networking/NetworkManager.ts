@@ -143,13 +143,13 @@ export class NetworkManager {
     this.setupBroadcastChannel();
 
     const defaultUrl =
-      typeof window !== 'undefined' && window.location.port && window.location.port !== '3000' && window.location.port !== '5173'
-        ? window.location.origin
-        : typeof window !== 'undefined'
-        ? `http://${window.location.hostname || 'localhost'}:4000`
-        : 'http://localhost:4000';
+      typeof window === 'undefined'
+        ? 'http://localhost:4000'
+        : import.meta.env.DEV
+          ? `http://${window.location.hostname || 'localhost'}:4000`
+          : window.location.origin;
 
-    const url = serverUrl || defaultUrl;
+    const url = serverUrl || import.meta.env.VITE_SERVER_URL || defaultUrl;
     this.setStatus('connecting');
 
     return new Promise((resolve) => {

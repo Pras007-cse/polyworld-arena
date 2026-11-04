@@ -1,61 +1,210 @@
-# 🌍 PolyWorld Arena (`polyworld-arena`)
+# 🌍 PolyWorld Arena
 
-[![Three.js](https://img.shields.io/badge/Three.js-r128%20%2F%200.160-black?logo=three.js)](https://threejs.org/)
+<div align="center">
+
+[![Node.js Version](https://img.shields.io/badge/Node.js-20.x%20LTS-339933?logo=node.js&logoColor=white)](https://nodejs.org/)
+[![Docker Ready](https://img.shields.io/badge/Docker-Ready-2496ED?logo=docker&logoColor=white)](https://www.docker.com/)
+[![Three.js](https://img.shields.io/badge/Three.js-r160-black?logo=three.js)](https://threejs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.4-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![React](https://img.shields.io/badge/React-18.3-61DAFB?logo=react&logoColor=black)](https://react.dev/)
 [![Socket.IO](https://img.shields.io/badge/Socket.IO-4.7-010101?logo=socket.io)](https://socket.io/)
+[![Vite](https://img.shields.io/badge/Vite-5.3-646CFF?logo=vite&logoColor=white)](https://vitejs.dev/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-emerald.svg)](./LICENSE)
 
-**PolyWorld Arena** is an expansive, open-world **3D multiplayer social sandbox & arena web game** built with **Three.js**, **React**, **TypeScript**, and **Node.js + Socket.IO**. Players can explore a dense **1400m × 1400m** world filled with 12+ interconnected districts, 65+ neighborhood houses, geometric 3D sculptures, controllable sports cars, speedboats, aeroplanes, a rescue helicopter, an autonomous 8-seat Town Tour Bus, and interactive mini-games.
+**An expansive, deployable 3D multiplayer social sandbox & arena web game built with Three.js, React, TypeScript, and Node.js + Socket.IO.**
+
+[Features](#-features) • [Quick Start](#-quick-start) • [Docker Deployment](#-docker-deployment) • [Controls](#-controls-reference) • [Architecture](#-system-architecture) • [API & Protocols](#-networking--api-protocols)
+
+</div>
 
 ---
 
-## ✨ Key Features
+## 📖 Overview
 
-### 🌐 4-Layer Simultaneous Multiplayer Architecture
-1. **Authoritative Socket.IO Server (`backend/`)**: Real-time 20Hz synchronization of player movement, rotations, skeletal animations, overhead chat bubbles, crystal pickups, and Crown Tag transfers.
-2. **Instant Cross-Tab P2P Sync (`BroadcastChannel`)**: Open multiple browser tabs or windows on the same machine to play together immediately with zero server configuration.
-3. **2-Player Split-Screen Co-op & PvP Mode**: Toggle **2P Split-Screen** in the top HUD bar to split the WebGL viewport into Left (`Player 1: WASD + Space`) and Right (`Player 2: Arrow Keys / IJKL + Enter`) cameras on a single screen.
-4. **Autonomous AI Companions**: 5 smart AI explorers (*Nova*, *Zephyr*, *Lyra*, *Orion*, *Vega*) roam the world, ride the tour bus, and compete for Aether Shards.
+**PolyWorld Arena** immerses players into a vibrant **1400m × 1400m** low-poly open world featuring 12+ interconnected districts, 65+ explorable buildings, dynamic stunt ramps, interactive sports mini-games, and a full suite of drivable vehicles (sports cars, dune buggies, biplanes, rescue helicopters, speedboats, and an autonomous 8-seat tour bus).
 
-### 🚌 Vehicles, Aircraft, Boats & Autonomous Transit
-- **Autonomous 8-Seat Town Travel Bus**: Follows a dedicated 24-node obstacle-free **Ring Boulevard (`r = 110m`)** with 8 glass Bus Stop Shelters. Up to **8 players/bots** can sit together on the sightseeing deck while touring the entire town.
-- **Controllable Sports Cars, Dune Buggy & 4x4 Rover**: Full throttle, reverse, steering, Nitro Boost (`Shift / F`), horn (`Space`), and **parabolic stunt-jump physics** off slanted highway ramps and overpasses.
-- **Controllable 3D Aeroplanes & Rescue Helicopter**: Take off from **Aether Airport (`75, -55`)** in the **Skyhawk Turbo Biplane** or lift off vertically from the **Helipad (`28, -28`)** in the **Rescue Helicopter** (`Space` to climb, `Shift` to descend, `WASD` to bank & turn).
-- **Controllable Speedboats & Navigable Water Canal**: Pilot speedboats across **Serene Crystal Lake**, through the bridged **Water Canal**, and out to **Coral Harbor Bay** (with strict water/land shoreline boundaries).
+Designed for zero-friction accessibility, the platform runs natively inside any modern WebGL browser with **four simultaneous multiplayer layers**—from single-server cloud instances down to zero-configuration cross-tab local play and 2-Player split-screen.
 
-### 🪝 Action Gadgets, Sky-Train, Weather, Quests, Pets & Builder Mode
-- **Camera Mouse Mode Option (`KeyM`) & 1st/3rd-Person View (`KeyV`)**: Choose between **Drag & Move Orbit** or **Free Mouse Move (Auto-Look)** in the Lobby or HUD, and switch between 3rd-Person, **1st-Person Cockpit/Eyes**, and Wide Cinematic views.
-- **Grappling Hook (`KeyQ`) & Mid-Air Glider Parachute**: Fire a 3D grappling tether onto rooftops, and hold `Space` while falling from upper-floor windows or aircraft to unfold a 3D Hang-Glider wing.
-- **Friendly Paintball Blaster (`KeyG`), Jetpack (`KeyJ`), & Street Hoverboard (`KeyH`)**: Tag rivals with colorful paintball orbs, fly with twin thruster flames, or cruise on a neon hoverboard.
-- **Elevated 3rd-Floor Monorail Sky-Train (`🚈 Sky-Train`)**: Ride an automated 2-car neon sky-train looping at `y = 9.2m` around the skyscraper skyline.
-- **Dynamic Weather (`🌦️ Clear / Rain / Snow / Rainbow`) & Aether Meteor Showers (`☄️ Meteor`)**: Toggle 3D rain, snow flurries, a giant 7-band 3D sky rainbow, or summon meteor showers that drop 100-XP Mega Shards.
-- **NPC Quest Givers (`📜 Quests`), Time-Trial Race (`🏁 Time Trial`), Upgrade Shop (`🛒 Shop`), 3D Pets & Sandbox Builder (`KeyB`)**: Complete quests from 4 named NPCs, race through 8 checkpoints, equip a 3D Dragon/Drone/Pup pet, unlock Speed Boots/Moon Jump/Rainbow Trails (auto-saved in `localStorage`), and place custom 3D stunt ramps in the world.
+---
 
-### 🎮 Interactive Mini-Games, Playground Rides & Dense Neighborhoods
-- **40+ Enterable Multi-Floor Towers & Walk-In Houses**: Run inside 2-, 3-, and 4-story buildings through open ground-floor doorways, climb interior staircases to upper floors, collect indoor Aether Shards, and **jump right out of the 3D upper-floor windows**!
-- **65+ Neighborhood Houses & 70+ 3D Sculptures**: Full vehicle-to-building collision physics, residential streets, cottages, villas, modern lofts, rotating torus knots, polyhedron monuments, wind turbines, and floating hot air balloons.
-- **Interactive Sports & Arcade Zones**:
-  - ⚽ **Town Soccer Stadium (`-60, 65`)**: Kick or bump the physics-enabled 3D Soccer Ball into the goalposts for `+30 XP`.
-  - 🎳 **10-Pin Bowling Alley (`34, 28`)**: Roll the bowling ball down the hardwood lane to knock down all 10 3D pins.
-  - 🏀 **Basketball Court (`-34, 36`)**: Launch 3-point jump shots through the hoop.
-  - 🎹 **Giant Walk-On Floor Piano (`-28, 22`)**: Walk or jump across 8 glowing keys to play a synthesized C-Major scale.
-  - 💰 **14 Interactive Treasure Chests & 4 Mystic Teleport Portals**: Pop open golden chests across neighborhoods and warp between suburbs.
-- **Amusement & Playground Rides**: Physics **Seesaws (Teeter-Totters)**, rotating **Merry-Go-Round Carousels**, **Park Swings**, and a **24m Giant Ferris Wheel** with self-leveling gondolas.
+## ✨ Features
+
+### 🌐 Multi-Tiered Multiplayer Engine
+- **Authoritative Socket.IO Server**: 20Hz state synchronization handling position deltas, rotations, character bone animations, overhead chat bubbles, collectible crystals, and dynamic Crown Tag ownership.
+- **Cross-Tab P2P Sync (`BroadcastChannel`)**: Open several browser tabs or windows on the same machine to instantly connect with zero server latency or network configuration.
+- **2-Player Split-Screen Mode**: One-click split viewport for local co-op and PvP on a single keyboard (Left: `WASD + Space`, Right: `Arrows / IJKL + Enter`).
+- **Autonomous AI Companions**: 5 intelligent bots (*Nova*, *Zephyr*, *Lyra*, *Orion*, *Vega*) roam the streets, board the tour bus, and collect Aether Shards.
+
+### 🚗 Land, Sea & Air Vehicles
+- **Sports Cars, Dune Buggies & Rovers**: Physics-driven acceleration, drift steering, parabolic stunt jumps off highway ramps, horn, and nitro afterburners.
+- **Aeroplanes & Rescue Helicopter**: Take off from Aether Airport in the Skyhawk Turbo Biplane or ascend vertically from the rooftop helipad with realistic pitch, bank, and altitude controls.
+- **Speedboats & Canals**: Pilot motorboats through Serene Crystal Lake, the central canal locks, and into Coral Harbor Bay.
+- **Autonomous 8-Seat Tour Bus**: Continuous 24-waypoint transit loop circling Ring Boulevard (`r = 110m`) with 8 sheltered stations, allowing up to 8 players to tour together.
+
+### 🪝 Gadgets, Movement & Customization
+- **Grappling Hook & Mid-Air Glider**: Tether to rooftops and deploy a 3D hang-glider parachute to glide safely from heights.
+- **Jetpack, Hoverboard & Blasters**: Cruise at high speeds on neon hoverboards, fly with twin thrusters, and tag other players with non-lethal paintball blasters.
+- **Camera Modes**: Toggle between 3rd-Person Follow, 1st-Person Cockpit, and Cinematic Wide Orbit (`KeyV`), plus Auto-Look Mouse Lock (`KeyM`).
+- **Character Customization**: Customize colors, accessories (crowns, hats, capes, halos, headphones), and trigger 3D animations/emotes.
+
+### 🎪 Interactive Mini-Games & Open World
+- **Enterable Architecture**: 40+ multi-story walk-in towers, suburban houses, and villas with climbable staircases and jump-out windows.
+- **Interactive Sports & Arcades**:
+  - ⚽ **Soccer Stadium**: Physics-driven soccer ball with goal scoring and XP rewards.
+  - 🎳 **10-Pin Bowling**: Working bowling lane with pin knockdown physics.
+  - 🏀 **Basketball Court**: Launch 3-point shots into glowing hoops.
+  - 🎹 **Walk-On Floor Piano**: 8-key interactive keyboard synthesizing a C-Major scale.
+- **Weather & Cosmic Events**: Real-time rain flurries, snow, 7-band sky rainbows, and random Aether Meteor Showers dropping mega-XP shards.
+- **NPC Quests, Time Trials & Pets**: Complete NPC missions, race time-trial checkpoints, unlock speed upgrades, and adopt 3D pet companions.
 
 ---
 
 ## 🕹️ Controls Reference
 
-| Action | Player 1 (Single / Left Split-Screen) | Player 2 (Right Split-Screen) | Vehicle / Aircraft Mode |
+| Action | Player 1 (Solo / Left Split-Screen) | Player 2 (Right Split-Screen) | Vehicle & Aircraft Mode |
 | :--- | :--- | :--- | :--- |
-| **Move / Steer** | `W` `A` `S` `D` *(or On-Screen D-Pad)* | `Arrow Keys` or `I` `J` `K` `L` | Throttle / Reverse / Turn (`A` `D`) |
-| **Jump / Climb** | `Space` | `Enter` or `Numpad 0` | Car Jump & Horn / Aircraft Climb Up (`Space`) |
-| **Sprint / Descend** | `Left Shift` | `Right Shift` or `O` | Car Nitro / Aircraft Descend (`Shift`) |
-| **Dash / Afterburner**| `F` | — | Turbo Boost (`F`) |
-| **Enter / Exit / Ride**| `E` *(or HUD Buttons)* | `U` | Exit Vehicle, Plane, Heli, Boat, Bus, or Ride (`E`) |
-| **3D Emotes** | `1` Wave • `2` Dance • `3` Spin • `4` Sit | `P` (Dance / Wave) | — |
-| **3D Camera Orbit** | `Click & Drag Mouse` + `Scroll Wheel` | Automatic 3rd-Person Follow | Orbit around Vehicle / Aircraft |
+| **Move / Steer** | <kbd>W</kbd> <kbd>A</kbd> <kbd>S</kbd> <kbd>D</kbd> *(or Virtual D-Pad)* | <kbd>▲</kbd> <kbd>◀</kbd> <kbd>▼</kbd> <kbd>▶</kbd> / <kbd>I</kbd> <kbd>J</kbd> <kbd>K</kbd> <kbd>L</kbd> | Steer <kbd>A</kbd> <kbd>D</kbd> • Throttle <kbd>W</kbd> • Reverse <kbd>S</kbd> |
+| **Jump / Climb** | <kbd>Space</kbd> | <kbd>Enter</kbd> / <kbd>Numpad 0</kbd> | Car Jump & Horn • Aircraft Ascend (<kbd>Space</kbd>) |
+| **Sprint / Descend** | <kbd>Left Shift</kbd> | <kbd>Right Shift</kbd> / <kbd>O</kbd> | Car Nitro Boost • Aircraft Descend (<kbd>Shift</kbd>) |
+| **Dash / Turbo** | <kbd>F</kbd> | — | Afterburner Boost (<kbd>F</kbd>) |
+| **Enter / Exit / Ride**| <kbd>E</kbd> | <kbd>U</kbd> | Board / Disembark Vehicle or Ride (<kbd>E</kbd>) |
+| **Grappling Hook** | <kbd>Q</kbd> | — | Grapple to target point |
+| **Jetpack / Hoverboard**| <kbd>J</kbd> *(Jetpack)* • <kbd>H</kbd> *(Hoverboard)* | — | Toggle aerial or ground transit gear |
+| **Paintball Blaster** | <kbd>G</kbd> *(or Left Click)* | — | Fire paintball projectile |
+| **Sandbox Builder** | <kbd>B</kbd> | — | Place custom stunt ramps in the world |
+| **Camera View** | <kbd>V</kbd> *(1st/3rd Person)* • <kbd>M</kbd> *(Mouse Lock)* | — | Orbit: `Click + Drag` • Zoom: `Scroll Wheel` |
+| **Emotes** | <kbd>1</kbd> Wave • <kbd>2</kbd> Dance • <kbd>3</kbd> Spin • <kbd>4</kbd> Sit | <kbd>P</kbd> *(Dance / Wave)* | — |
+
+---
+
+## 🏗️ System Architecture
+
+```text
+┌────────────────────────────────────────────────────────────────────────┐
+│                          PolyWorld Arena                               │
+└────────────────────────────────────────────────────────────────────────┘
+          │                                           │
+    (Web Browser)                               (Web Browser)
+   Player Client 1                             Player Client 2
+          │                                           │
+          ├────────────── Local BroadcastChannel ─────┤ (Zero-latency P2P)
+          │                                           │
+          └───────────── WebSocket / HTTP ────────────┘
+                              │
+                              ▼
+        ┌───────────────────────────────────────────┐
+        │        Authoritative Backend Server       │
+        │             (Express + Socket.IO)         │
+        ├───────────────────────────────────────────┤
+        │ • SocketHandler  (20Hz state broadcast)   │
+        │ • WorldManager   (Item spawns, Crown Tag) │
+        │ • PlayerManager  (Collision & validation) │
+        │ • Static Server  (Serves /frontend/dist)  │
+        └───────────────────────────────────────────┘
+```
+
+The game is structured as a TypeScript monorepo with strict separation of concerns:
+- **`shared/`**: Contains immutable protocol schemas, Socket.IO payload definitions, and world constants used by both frontend and backend.
+- **`backend/`**: Node.js/Express server handling authoritative simulation, player lifecycle, chat broadcast rate-limiting, and static file serving.
+- **`frontend/`**: Vite + React 18 application with Three.js rendering pipeline, sound synthesis, custom procedural shaders, and articulated character rigs.
+
+---
+
+## 🚀 Quick Start
+
+### Prerequisites
+- **Node.js**: `v18.0.0` or higher (Node 20+ LTS recommended)
+- **npm**: `v9.0.0` or higher
+- **Docker**: *(Optional)* For containerized deployment
+
+### Local Development (Live Reload)
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/your-username/polyworld-arena.git
+   cd polyworld-arena
+   ```
+
+2. **Install dependencies:**
+   ```bash
+   cd frontend && npm install
+   cd ../backend && npm install
+   cd ..
+   ```
+
+3. **Start the development servers:**
+   - **Backend Server** (runs on `http://localhost:4000`):
+     ```bash
+     npm run backend:dev
+     ```
+   - **Frontend Dev Server** (in a separate terminal, runs on `http://localhost:3000`):
+     ```bash
+     npm run dev
+     ```
+
+4. Open your browser at **`http://localhost:3000`**.
+
+---
+
+## 🐳 Docker Deployment
+
+The repository includes an optimized multi-stage [Dockerfile](./Dockerfile) using `node:20-slim`. It compiles the frontend and backend in isolated build stages and produces a lightweight, production-ready container that serves the full game over a single port.
+
+### Build and Run with Docker
+
+```bash
+# 1. Build the Docker image
+docker build -t polyworld-arena .
+
+# 2. Run the container on port 4000
+docker run -d -p 4000:4000 --name polyworld polyworld-arena
+```
+
+Access the application in your browser at **`http://localhost:4000`**.
+
+### Stop or Remove Container
+
+```bash
+docker stop polyworld
+docker rm polyworld
+```
+
+---
+
+## ⚙️ Configuration & Environment Variables
+
+Copy `.env.example` to `.env` to configure deployment settings:
+
+| Variable | Default | Description |
+| :--- | :--- | :--- |
+| `PORT` | `4000` | HTTP and WebSocket port for the unified backend server |
+| `NODE_ENV` | `production` | Environment mode (`development` or `production`) |
+| `VITE_SERVER_URL` | `http://localhost:4000` | Optional backend server address for standalone frontend development |
+
+---
+
+## 📡 Networking & API Protocols
+
+### HTTP Endpoints
+
+| Method | Endpoint | Description |
+| :--- | :--- | :--- |
+| `GET` | `/health` | Server status, version, and live world stats (players, active items) |
+| `GET` | `/api/players` | Returns active player list, count, and the current Crown Tag holder |
+| `GET` | `/*` | Serves the single-page production frontend application (`dist/index.html`) |
+
+### Socket.IO Real-Time Events
+
+| Channel | Event | Direction | Payload |
+| :--- | :--- | :--- | :--- |
+| **Lifecycle** | `player_join` | Client ➔ Server | `{ username, appearance }` |
+| | `player_joined` | Server ➔ Client | Broadcast of new player joining world |
+| | `player_left` | Server ➔ Client | Broadcast when player disconnects |
+| **Movement** | `player_move` | Client ➔ Server | `{ position, rotation, animation, velocity }` |
+| | `world_delta` | Server ➔ Client | 20Hz compressed world state sync to all clients |
+| **Interaction**| `chat_message` | Client ➔ Server | `{ text }` (rate-limited broadcast) |
+| | `collect_item` | Client ➔ Server | `{ itemId }` (crystal shard collection) |
+| | `claim_crown` | Client ➔ Server | `{ targetPlayerId }` (Crown Tag transfer) |
 
 ---
 
@@ -63,72 +212,52 @@
 
 ```text
 polyworld-arena/
-├── shared/                     # Shared TypeScript interfaces, constants & Socket.IO contracts
-│   ├── constants/world.ts      # World bounds (1400x1400), physics & speed constants
-│   ├── protocols/messages.ts   # Typed ClientToServerEvents & ServerToClientEvents
+├── shared/                     # Shared TypeScript interfaces & Socket.IO contracts
+│   ├── constants/world.ts      # World bounds (1400x1400), vehicle physics & speed rules
+│   ├── protocols/messages.ts   # ClientToServerEvents & ServerToClientEvents specifications
 │   └── types/index.ts          # PlayerState, CharacterAppearance, CollectibleItem types
-├── backend/                    # Authoritative Node.js + Express + Socket.IO Game Server
+├── backend/                    # Authoritative Node.js + Express + Socket.IO Server
 │   ├── src/
-│   │   ├── index.ts            # Unified HTTP + WebSocket + static frontend server
-│   │   ├── networking/         # SocketHandler (20Hz delta broadcast, Crown Tag, Shards)
-│   │   ├── players/            # PlayerManager (spawn, movement validation, score/levels)
-│   │   ├── world/              # WorldManager (authoritative crystal spawns & respawn timers)
-│   │   └── chat/               # ChatManager (rate-limited real-time chat broadcasting)
+│   │   ├── index.ts            # HTTP server, WebSocket orchestrator & static asset hosting
+│   │   ├── networking/         # SocketHandler (delta broadcasting, crown tag logic)
+│   │   ├── players/            # PlayerManager (position validation, score/level tracking)
+│   │   ├── world/              # WorldManager (authoritative shard spawns & respawn timers)
+│   │   └── chat/               # ChatManager (rate-limited chat broadcasting)
 │   ├── package.json
 │   └── tsconfig.json
-├── frontend/                   # React 18 + Three.js + Tailwind CSS Client
+├── frontend/                   # React 18 + Three.js + Vite Client
 │   ├── src/
-│   │   ├── components/         # LandingPage, CanvasView, HUD
-│   │   ├── networking/         # Hybrid NetworkManager (Socket.IO + BroadcastChannel P2P)
-│   │   ├── player/             # Articulated LocalPlayer & RemotePlayer 3D rigs
-│   │   ├── scenes/             # WorldScene (biomes, lighting, vehicles, physics loop)
+│   │   ├── components/         # LandingPage, CanvasView, HUD, SplitScreen controls
+│   │   ├── networking/         # Hybrid NetworkManager (Socket.IO + BroadcastChannel fallback)
+│   │   ├── player/             # LocalPlayer controller & RemotePlayer interpolation rigs
+│   │   ├── scenes/             # WorldScene (districts, lighting, vehicles, collision loop)
 │   │   └── systems/            # InputManager & Web Audio API SoundManager
-│   ├── dist/index.html         # Self-contained production single-file build
 │   ├── package.json
 │   └── vite.config.ts
-├── Dockerfile                  # Multi-stage production container build
-├── .env.example                # Environment variable template
-├── .gitignore                  # Standard Node/TypeScript/Vite ignore rules
-├── CONTRIBUTING.md             # Contributor guide
+├── Dockerfile                  # Multi-stage production container build (node:20-slim)
+├── .dockerignore               # Optimized Docker build context exclusions
+├── .env.example                # Environment variable configuration template
+├── CONTRIBUTING.md             # Contribution and development guidelines
 ├── LICENSE                     # MIT License
-└── package.json                # Root workspace scripts
+└── package.json                # Root orchestration scripts
 ```
 
 ---
 
-## 🚀 Getting Started
+## 🤝 Contributing
 
-### Option 1: Instant Browser Play (Zero Setup)
-Open `frontend/dist/index.html` (or `polyworld_arena.html`) directly in any modern browser. Open a second browser tab or click **🎮 2P Split-Screen** in the top bar to play multiplayer immediately!
+Contributions, issues, and feature requests are welcome! Feel free to check the [issues page](https://github.com/your-username/polyworld-arena/issues).
 
-### Option 2: Full-Stack Local Development
-```bash
-# 1. Install dependencies
-cd frontend && npm install
-cd ../backend && npm install
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-# 2. Start the Socket.IO multiplayer server (http://localhost:4000)
-cd backend && npm run dev
-
-# 3. Start the Vite frontend dev server (http://localhost:3000)
-cd ../frontend && npm run dev
-```
-
-### Option 3: Single-Port Production Server / Docker Deployment
-The backend automatically serves the compiled frontend from `frontend/dist` on the same port (`PORT=4000`), making deployment to **Render**, **Railway**, **Fly.io**, or **Docker** a single command:
-
-```bash
-# Build and start unified server on http://localhost:4000
-cd backend && npm start
-```
-
-Or with Docker:
-```bash
-docker build -t polyworld-arena .
-docker run -p 4000:4000 polyworld-arena
-```
+Please refer to [CONTRIBUTING.md](./CONTRIBUTING.md) for more details.
 
 ---
 
 ## 📄 License
-Distributed under the **MIT License**. See [`LICENSE`](./LICENSE) for details.
+
+This project is licensed under the **MIT License** — see the [LICENSE](./LICENSE) file for details.
