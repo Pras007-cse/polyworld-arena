@@ -275,7 +275,7 @@ export class NetworkManager {
 
     return new Promise((resolve) => {
       if (!this.socket || !this.socket.connected) {
-        resolve({ success: true, playerId: this.localPlayerId, player: this.localPlayerState, existingPlayers: [] });
+        resolve({ success: true, playerId: this.localPlayerId, player: this.localPlayerState || undefined, existingPlayers: [] });
         return;
       }
 
