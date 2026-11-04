@@ -148,8 +148,8 @@
               <p class="text-[11px] text-slate-300 leading-snug">Articulated 3D rig with Walk, Run, Jump, Wave, Dance, 360° Spin &amp; Bench Sit.</p>
             </div>
             <div class="p-3 rounded-xl bg-slate-900/70 border border-slate-700/70">
-              <div class="text-xs font-bold text-pink-300 mb-0.5">🏙️ Dense 1400m×1400m World</div>
-              <p class="text-[11px] text-slate-300 leading-snug">65+ Houses, Sculptures, Tour Bus, Cars, Planes, Helicopter, Boats, Bowling, Basketball, Giant Piano, Treasure Chests &amp; Rides!</p>
+              <div class="text-xs font-bold text-pink-300 mb-0.5">🏢 Enterable Multi-Floor Towers</div>
+              <p class="text-[11px] text-slate-300 leading-snug">Run inside 40+ Multi-Floor Towers &amp; Walk-In Houses, climb interior stairs to upper floors, and jump right out of 3D windows!</p>
             </div>
           </div>
         </div>
@@ -209,6 +209,36 @@
                 <option value="crystal_rush">💎 Crystal Rush (Score Attack)</option>
                 <option value="crown_tag">👑 Crown Tag Arena (PvP)</option>
                 <option value="split_coop">🎮 2-Player Split-Screen Mode</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Camera Control Mode & 3D Pet Companion Row -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label for="select-camera-mode" class="block text-[11px] font-semibold text-slate-300 mb-1 uppercase tracking-wider">
+                Camera Mouse Control
+              </label>
+              <select
+                id="select-camera-mode"
+                class="w-full px-3 py-2 rounded-xl bg-slate-950/75 border border-slate-700 text-white text-sm focus:outline-none focus:border-blue-500"
+              >
+                <option value="drag">🖱️ Drag &amp; Move (Hold Click)</option>
+                <option value="mouse_move">🎯 Free Mouse Move (Auto Look)</option>
+              </select>
+            </div>
+            <div>
+              <label for="select-pet-type" class="block text-[11px] font-semibold text-slate-300 mb-1 uppercase tracking-wider">
+                3D Pet Companion
+              </label>
+              <select
+                id="select-pet-type"
+                class="w-full px-3 py-2 rounded-xl bg-slate-950/75 border border-slate-700 text-white text-sm focus:outline-none focus:border-blue-500"
+              >
+                <option value="dragon">🐉 Mini Aether Dragon</option>
+                <option value="drone">🛸 Cyber Halo Drone</option>
+                <option value="pup">🐶 Golden Explorer Pup</option>
+                <option value="none">✨ No Pet</option>
               </select>
             </div>
           </div>
@@ -370,6 +400,8 @@
           <option value="-60,52">⚽ Town Soccer Stadium (-60, 65)</option>
           <option value="34,24">🎳 Bowling &amp; Basketball Plaza (34, 28)</option>
           <option value="-28,20">🎹 Giant Floor Piano &amp; Disco (-28, 22)</option>
+          <option value="-26,-20">🏢 Plaza 4-Story Enterable Sky-Tower (-26, -28)</option>
+          <option value="26,20">🏢 East 4-Story Glass High-Rise (26, 28)</option>
           <option value="220,-220">🏘️ Northeast Suburbia &amp; Towers (220, -220)</option>
           <option value="-220,220">🏛️ Southwest Geometric Park (-220, 220)</option>
         </select>
@@ -430,6 +462,69 @@
 
         <button
           type="button"
+          id="btn-board-skytrain"
+          class="px-2.5 py-1.5 rounded-xl glass-panel text-xs font-semibold text-sky-300 hover:text-white border border-sky-400/40 transition cursor-pointer"
+          title="Board or Exit the Elevated 3rd-Floor Monorail Sky-Train"
+        >
+          🚈 Sky-Train
+        </button>
+
+        <button
+          type="button"
+          id="btn-camera-mode"
+          class="px-2.5 py-1.5 rounded-xl glass-panel text-xs font-semibold text-indigo-300 hover:text-white border border-indigo-400/40 transition cursor-pointer"
+          title="Switch between Normal Drag Orbit and Free Mouse-Move Camera (Shortcut: M)"
+        >
+          🖱️ Cam: Drag
+        </button>
+
+        <button
+          type="button"
+          id="btn-camera-view"
+          class="px-2.5 py-1.5 rounded-xl glass-panel text-xs font-semibold text-purple-300 hover:text-white transition cursor-pointer"
+          title="Cycle 3rd-Person, 1st-Person Cockpit/Eyes, and Wide View (Shortcut: V)"
+        >
+          🎥 3rd-Person
+        </button>
+
+        <button
+          type="button"
+          id="btn-cycle-weather"
+          class="px-2.5 py-1.5 rounded-xl glass-panel text-xs font-semibold text-cyan-200 hover:text-white transition cursor-pointer"
+          title="Cycle Weather: Clear, Rain, Snow, &amp; Giant 3D Rainbow"
+        >
+          🌦️ Clear
+        </button>
+
+        <button
+          type="button"
+          id="btn-meteor-event"
+          class="px-2.5 py-1.5 rounded-xl glass-panel text-xs font-semibold text-orange-300 hover:text-white transition cursor-pointer"
+          title="Trigger an Aether Meteor Shower Event"
+        >
+          ☄️ Meteor
+        </button>
+
+        <button
+          type="button"
+          id="btn-start-race"
+          class="px-2.5 py-1.5 rounded-xl glass-panel text-xs font-semibold text-lime-300 hover:text-white transition cursor-pointer"
+          title="Start or Reset the 8-Checkpoint Time-Trial Race"
+        >
+          🏁 Time Trial
+        </button>
+
+        <button
+          type="button"
+          id="btn-open-shop"
+          class="px-2.5 py-1.5 rounded-xl glass-panel text-xs font-bold text-amber-300 hover:text-white border border-amber-400/50 transition cursor-pointer"
+          title="Open Upgrade Shop &amp; 3D Pet Customizer"
+        >
+          🛒 Shop
+        </button>
+
+        <button
+          type="button"
           id="btn-open-lobby"
           class="px-2.5 py-1.5 rounded-xl glass-panel text-xs font-semibold text-blue-300 hover:text-white transition cursor-pointer"
         >
@@ -452,6 +547,29 @@
             <span>🔵 You</span>
             <span>🟡 Crown</span>
             <span>💎 Shard</span>
+          </div>
+        </div>
+
+        <!-- Active NPC Quest & Time-Trial Tracker Card -->
+        <div class="w-44 p-2.5 rounded-xl glass-panel flex flex-col gap-1.5 text-xs">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-amber-300 uppercase tracking-wider text-[10px]">📜 Active Quest</span>
+            <button type="button" id="btn-new-quest" class="px-1.5 py-0.5 rounded bg-amber-500/25 hover:bg-amber-500/45 border border-amber-400/40 text-[10px] font-semibold text-amber-200 cursor-pointer">
+              Next Quest
+            </button>
+          </div>
+          <div id="hud-quest-title" class="text-[11px] font-semibold text-white leading-tight">
+            Mayor Aria: Collect 3 Shards
+          </div>
+          <div class="w-full h-1.5 rounded-full bg-slate-800 overflow-hidden">
+            <div id="hud-quest-bar" class="h-full bg-gradient-to-r from-amber-400 to-emerald-400 transition-all duration-300" style="width: 0%"></div>
+          </div>
+          <div class="flex items-center justify-between text-[10px] text-slate-300">
+            <span id="hud-quest-progress">0 / 3</span>
+            <span class="text-emerald-300 font-semibold">+100 XP</span>
+          </div>
+          <div id="hud-race-timer" class="hidden pt-1 border-t border-slate-700/70 text-[11px] font-mono text-lime-300 font-bold">
+            🏁 Race: 0.0s (CP 1/8)
           </div>
         </div>
       </div>
@@ -531,11 +649,86 @@
             🔑 Interact / Ride (E)
           </button>
         </div>
+        <!-- Action Gadgets Row -->
+        <div class="flex flex-wrap items-center gap-1.5 pt-1 border-t border-slate-700/60">
+          <button type="button" id="btn-gadget-grapple" class="px-2 py-1 rounded-lg bg-sky-600/35 hover:bg-sky-500/55 border border-sky-400/50 text-[11px] font-semibold text-sky-200 transition cursor-pointer" title="Fire 3D Grappling Hook to zip onto rooftops (Shortcut: Q)">
+            🪝 Grapple (Q)
+          </button>
+          <button type="button" id="btn-gadget-blaster" class="px-2 py-1 rounded-lg bg-fuchsia-600/35 hover:bg-fuchsia-500/55 border border-fuchsia-400/50 text-[11px] font-semibold text-fuchsia-200 transition cursor-pointer" title="Fire Friendly Arena Paintball Blaster (Shortcut: G)">
+            🔫 Blaster (G)
+          </button>
+          <button type="button" id="btn-gadget-jetpack" class="px-2 py-1 rounded-lg bg-orange-600/35 hover:bg-orange-500/55 border border-orange-400/50 text-[11px] font-semibold text-orange-200 transition cursor-pointer" title="Toggle 3D Thruster Jetpack (Shortcut: J, hold Space to fly)">
+            🚀 Jetpack (J)
+          </button>
+          <button type="button" id="btn-gadget-hoverboard" class="px-2 py-1 rounded-lg bg-pink-600/35 hover:bg-pink-500/55 border border-pink-400/50 text-[11px] font-semibold text-pink-200 transition cursor-pointer" title="Toggle Neon Street Hoverboard (Shortcut: H)">
+            🛹 Board (H)
+          </button>
+          <button type="button" id="btn-gadget-build" class="px-2 py-1 rounded-lg bg-teal-600/35 hover:bg-teal-500/55 border border-teal-400/50 text-[11px] font-semibold text-teal-200 transition cursor-pointer" title="Spawn a Custom 3D Stunt Ramp or Neon Block in front of you (Shortcut: B)">
+            🧱 Build (B)
+          </button>
+        </div>
         <div id="hud-interact-status" class="text-[11px] text-amber-200 font-medium truncate max-w-xs sm:max-w-md">
-          🚌 Tour Bus: En Route • Press [E] near any Car, Boat, Bus, Seesaw, Carousel, Swing, or Ferris Wheel!
+          🚌 Tour Bus &amp; 🚈 Sky-Train Active • Hold [Space] in mid-air to Glide!
         </div>
       </div>
 
+    </div>
+  </div>
+
+  <!-- ==================== IN-GAME UPGRADE SHOP & PET MODAL ==================== -->
+  <div id="shop-modal" class="hidden absolute inset-0 z-30 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-sm">
+    <div class="w-full max-w-lg p-6 rounded-2xl glass-panel border border-amber-400/40 space-y-4">
+      <div class="flex items-center justify-between">
+        <div>
+          <h3 class="text-lg font-extrabold text-white">🛒 PolyWorld Upgrade Shop &amp; Gear</h3>
+          <p class="text-xs text-slate-300">Unlock permanent perks &amp; customize your 3D Pet Companion (auto-saved!).</p>
+        </div>
+        <button type="button" id="btn-close-shop" class="px-3 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-bold text-slate-200 cursor-pointer">
+          ✕ Close
+        </button>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+        <div class="p-3 rounded-xl bg-slate-900/80 border border-slate-700 flex flex-col justify-between gap-2">
+          <div>
+            <div class="font-bold text-cyan-300">⚡ Hyper-Speed Boots</div>
+            <p class="text-[11px] text-slate-400">+35% Walk, Sprint &amp; Hoverboard speed across the world.</p>
+          </div>
+          <button type="button" id="btn-buy-speed" class="py-1.5 px-3 rounded-lg bg-cyan-600/40 hover:bg-cyan-500/60 border border-cyan-400/50 font-bold text-white cursor-pointer">
+            Toggle Speed Boots (Free / 50 XP)
+          </button>
+        </div>
+
+        <div class="p-3 rounded-xl bg-slate-900/80 border border-slate-700 flex flex-col justify-between gap-2">
+          <div>
+            <div class="font-bold text-emerald-300">🦘 Moon-Gravity Jump</div>
+            <p class="text-[11px] text-slate-400">+35% Jump height for leaping onto 2nd-floor balconies.</p>
+          </div>
+          <button type="button" id="btn-buy-jump" class="py-1.5 px-3 rounded-lg bg-emerald-600/40 hover:bg-emerald-500/60 border border-emerald-400/50 font-bold text-white cursor-pointer">
+            Toggle Moon Jump (Free / 50 XP)
+          </button>
+        </div>
+
+        <div class="p-3 rounded-xl bg-slate-900/80 border border-slate-700 flex flex-col justify-between gap-2">
+          <div>
+            <div class="font-bold text-pink-300">🌈 Rainbow Particle Trail</div>
+            <p class="text-[11px] text-slate-400">Emit glowing rainbow sparkles as you run, drive, or glide.</p>
+          </div>
+          <button type="button" id="btn-buy-trail" class="py-1.5 px-3 rounded-lg bg-pink-600/40 hover:bg-pink-500/60 border border-pink-400/50 font-bold text-white cursor-pointer">
+            Toggle Rainbow Trail
+          </button>
+        </div>
+
+        <div class="p-3 rounded-xl bg-slate-900/80 border border-slate-700 flex flex-col justify-between gap-2">
+          <div>
+            <div class="font-bold text-amber-300">🐉 Cycle 3D Pet Companion</div>
+            <p class="text-[11px] text-slate-400">Switch between Mini Dragon, Cyber Drone, Golden Pup, or None.</p>
+          </div>
+          <button type="button" id="btn-cycle-pet" class="py-1.5 px-3 rounded-lg bg-amber-600/40 hover:bg-amber-500/60 border border-amber-400/50 font-bold text-white cursor-pointer">
+            Switch 3D Pet
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -878,6 +1071,48 @@
           this.rightArmGroup.add(rArm, rHand);
           this.bodyGroup.add(this.rightArmGroup);
 
+          // 3D Jetpack Thrusters on Back (visible when jetpackActive is true)
+          this.jetpackMesh = new THREE.Group();
+          const jpMat = new THREE.MeshStandardMaterial({ color: 0x94a3b8, metalness: 0.8, roughness: 0.2 });
+          const jpGlow = new THREE.MeshBasicMaterial({ color: 0x38bdf8 });
+          [-0.18, 0.18].forEach(function (jx) {
+            const cyl = new THREE.Mesh(new THREE.CylinderGeometry(0.11, 0.13, 0.58, 10), jpMat);
+            cyl.position.set(jx, 1.15, -0.34);
+            const noz = new THREE.Mesh(new THREE.ConeGeometry(0.1, 0.2, 8), jpGlow);
+            noz.position.set(jx, 0.82, -0.34);
+            this.jetpackMesh.add(cyl, noz);
+          }, this);
+          this.jetpackMesh.visible = !!this.jetpackActive;
+          this.bodyGroup.add(this.jetpackMesh);
+
+          // 3D Hang-Glider Parachute Wing Canopy (auto-deploys when holding Space while falling in mid-air!)
+          this.gliderMesh = new THREE.Group();
+          const wingMat = new THREE.MeshStandardMaterial({ color: 0x06b6d4, emissive: 0x0284c7, emissiveIntensity: 0.4, side: THREE.DoubleSide });
+          const wLeft = new THREE.Mesh(new THREE.BoxGeometry(2.1, 0.06, 1.1), wingMat);
+          wLeft.position.set(-0.95, 2.55, -0.1);
+          wLeft.rotation.z = 0.15;
+          const wRight = new THREE.Mesh(new THREE.BoxGeometry(2.1, 0.06, 1.1), wingMat);
+          wRight.position.set(0.95, 2.55, -0.1);
+          wRight.rotation.z = -0.15;
+          const barL = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.025, 1.1, 6), jpMat);
+          barL.position.set(-0.45, 2.0, 0.15);
+          const barR = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.025, 1.1, 6), jpMat);
+          barR.position.set(0.45, 2.0, 0.15);
+          this.gliderMesh.add(wLeft, wRight, barL, barR);
+          this.gliderMesh.visible = false;
+          this.bodyGroup.add(this.gliderMesh);
+
+          // 3D Street Hoverboard Deck underfoot (visible when hoverboardActive is true)
+          this.hoverboardMesh = new THREE.Group();
+          const hbDeck = new THREE.Mesh(
+            new THREE.BoxGeometry(0.85, 0.1, 1.95),
+            new THREE.MeshStandardMaterial({ color: 0xec4899, emissive: 0xdb2777, emissiveIntensity: 0.5, metalness: 0.6 })
+          );
+          hbDeck.position.y = 0.08;
+          this.hoverboardMesh.add(hbDeck);
+          this.hoverboardMesh.visible = !!this.hoverboardActive;
+          this.mesh.add(this.hoverboardMesh);
+
           // Legs
           const legGeo = new THREE.BoxGeometry(0.28, 0.68, 0.28);
           legGeo.translate(0, -0.34, 0);
@@ -1014,6 +1249,9 @@
 
           let speed = input.sprint ? WORLD.RUN_SPEED : WORLD.WALK_SPEED;
           if (this.speedBoostTimer > 0) speed = WORLD.DASH_SPEED;
+          if (this.hoverboardActive) speed *= 1.55;
+          if (this.perkSpeedBoots) speed *= 1.32;
+          if (this.isGliding) speed = Math.max(speed, 18.5);
 
           const moveDir = new THREE.Vector3();
           if (input.forward) moveDir.z -= 1;
@@ -1040,10 +1278,27 @@
           }
 
           if (input.jump && this.isGrounded) {
-            this.velocity.y = WORLD.JUMP_FORCE;
+            this.velocity.y = WORLD.JUMP_FORCE * (this.perkMoonJump ? 1.35 : 1.0);
             this.isGrounded = false;
             sound.playJump();
           }
+
+          // Jetpack Vertical Thrusters when Jetpack is toggled ON and holding Space
+          if (this.jetpackActive && input.jump) {
+            this.velocity.y = Math.min(15.0, this.velocity.y + 42.0 * delta);
+            this.isGrounded = false;
+          }
+
+          // Mid-Air Glider Parachute when falling from heights (windows, towers, planes) and holding Space!
+          if (!this.isGrounded && !this.jetpackActive && this.position.y > 2.8 && input.jump && this.velocity.y < -0.5) {
+            this.isGliding = true;
+            this.velocity.y = Math.max(this.velocity.y, -3.2);
+          } else {
+            this.isGliding = false;
+          }
+          if (this.gliderMesh) this.gliderMesh.visible = !!this.isGliding;
+          if (this.jetpackMesh) this.jetpackMesh.visible = !!this.jetpackActive;
+          if (this.hoverboardMesh) this.hoverboardMesh.visible = !!this.hoverboardActive;
 
           // Check Jump Pads
           for (let i = 0; i < jumpPads.length; i++) {
@@ -1070,7 +1325,7 @@
             }
           }
 
-          const prevSlopeY = getSlopeHeight(this.position.x, this.position.z);
+          const prevSlopeY = getSlopeHeight(this.position.x, this.position.z, this.position.y);
           const nextPos = this.position.clone();
           nextPos.x += this.velocity.x * delta;
           nextPos.z += this.velocity.z * delta;
@@ -1091,7 +1346,7 @@
             }
           }
 
-          const slopeY = getSlopeHeight(nextPos.x, nextPos.z);
+          const slopeY = getSlopeHeight(nextPos.x, nextPos.z, this.position.y);
           const wasAirborne = !this.isGrounded;
 
           // Track upward slope climb velocity so running off a slanted ramp launches you into the air
@@ -1336,9 +1591,10 @@
       const animatedProps = [];
       const burstParticles = [];
       const slantedRamps = [];
+      const vehicleBlockerBoxes = [];
 
-      // Compute exact surface height for slanted ramps, elevated overpasses, and hills
-      function getSlopeHeight(x, z) {
+      // Compute exact surface height for slanted ramps, overpasses, AND multi-floor interior slabs/stairs
+      function getSlopeHeight(x, z, currentY) {
         let maxH = 0;
         for (let i = 0; i < slantedRamps.length; i++) {
           const r = slantedRamps[i];
@@ -1358,6 +1614,10 @@
               h = r.yStart + t * (r.yEnd - r.yStart);
             } else {
               h = r.yStart;
+            }
+            // For multi-floor interior slabs & staircases, only support the player if they have climbed near that level
+            if (r.isMultiFloor && typeof currentY === 'number') {
+              if (h > currentY + 1.25) continue;
             }
             if (h > maxH) maxH = h;
           }
@@ -1642,14 +1902,284 @@
         return g;
       }
 
-      const buildings = [
-        { x: -36, z: -15, rot: 0.2, color: 0xd97757, roofColor: 0x7c2d12, w: 8, d: 7, h: 5.5 },
-        { x: -48, z: -8, rot: -0.1, color: 0xe2e8f0, roofColor: 0x1e3a8a, w: 9, d: 8, h: 6.0 },
-        { x: -35, z: 12, rot: -0.3, color: 0xfcd34d, roofColor: 0x991b1b, w: 7.5, d: 7, h: 5.2 },
-        { x: -16, z: 42, rot: 0, color: 0xcbd5e1, roofColor: 0x334155, w: 11, d: 9, h: 9.5 },
-        { x: 16, z: 42, rot: 0, color: 0xfde047, roofColor: 0xb45309, w: 10, d: 9, h: 8.5 }
+      // Helper to build an Enterable Multi-Floor Building or Walk-In House (2, 3, or 4 Floors)
+      // Characters can run inside through the ground-floor doorways, climb interior staircases to every floor,
+      // and jump right out of the open 3D windows on Floor 2, Floor 3, and Floor 4!
+      // Vehicles are strictly blocked by the building's exterior vehicleBlockerBox & wall colliders.
+      function createEnterableMultiFloorBuilding(conf) {
+        const bx = conf.x;
+        const bz = conf.z;
+        const floors = conf.floors || 3;
+        const storyH = 4.6;
+        const w = conf.w || 15.0;
+        const d = conf.d || 15.0;
+        const hw = w / 2;
+        const hd = d / 2;
+        const totalH = floors * storyH;
+
+        const g = new THREE.Group();
+        g.position.set(bx, 0, bz);
+
+        const wallMat = new THREE.MeshStandardMaterial({ color: conf.color || 0xe2e8f0, roughness: 0.65, side: THREE.DoubleSide });
+        const accentMat = new THREE.MeshStandardMaterial({ color: conf.roofColor || 0x1e3a8a, roughness: 0.5 });
+        const floorMat = new THREE.MeshStandardMaterial({ color: 0xd6d3d1, roughness: 0.75, side: THREE.DoubleSide });
+        const stairMat = new THREE.MeshStandardMaterial({ color: 0xf59e0b, roughness: 0.4, metalness: 0.2 });
+        const frameMat = new THREE.MeshStandardMaterial({ color: 0x38bdf8, emissive: 0x0284c7, emissiveIntensity: 0.45 });
+        const glassMat = new THREE.MeshStandardMaterial({ color: 0xbae6fd, transparent: true, opacity: 0.32, side: THREE.DoubleSide });
+
+        // Block vehicles from driving into the building footprint
+        vehicleBlockerBoxes.push(
+          new THREE.Box3(
+            new THREE.Vector3(bx - hw - 0.5, 0, bz - hd - 0.5),
+            new THREE.Vector3(bx + hw + 0.5, totalH, bz + hd + 0.5)
+          )
+        );
+
+        // 4 Solid Corner Pillars (with player & vehicle collisionBoxes)
+        const pilSize = 1.6;
+        const cornerOffsets = [
+          { ox: -hw + pilSize / 2, oz: -hd + pilSize / 2 },
+          { ox: hw - pilSize / 2, oz: -hd + pilSize / 2 },
+          { ox: -hw + pilSize / 2, oz: hd - pilSize / 2 },
+          { ox: hw - pilSize / 2, oz: hd - pilSize / 2 }
+        ];
+        cornerOffsets.forEach(function (co) {
+          const pil = new THREE.Mesh(new THREE.BoxGeometry(pilSize, totalH, pilSize), accentMat);
+          pil.position.set(co.ox, totalH / 2, co.oz);
+          pil.castShadow = true;
+          pil.receiveShadow = true;
+          g.add(pil);
+          collisionBoxes.push(
+            new THREE.Box3(
+              new THREE.Vector3(bx + co.ox - pilSize / 2, 0, bz + co.oz - pilSize / 2),
+              new THREE.Vector3(bx + co.ox + pilSize / 2, totalH, bz + co.oz + pilSize / 2)
+            )
+          );
+        });
+
+        // Ground Floor Slab
+        const groundSlab = new THREE.Mesh(new THREE.BoxGeometry(w - 0.2, 0.16, d - 0.2), floorMat);
+        groundSlab.position.y = 0.08;
+        groundSlab.receiveShadow = true;
+        g.add(groundSlab);
+
+        // Build Each Story's Walls, Open Doorways (Floor 1), and Open Jump-Through 3D Windows (All Floors)
+        for (let f = 0; f < floors; f++) {
+          const y0 = f * storyH;
+          const sillH = (f === 0) ? 0.95 : 0.38; // Low 0.38m window sill on upper floors so players can run/jump right out!
+          const headerH = 0.75;
+          const winH = storyH - sillH - headerH;
+
+          // Interior Ceiling Warm Light
+          const lightBulb = new THREE.Mesh(
+            new THREE.BoxGeometry(1.6, 0.12, 1.6),
+            new THREE.MeshBasicMaterial({ color: 0xfef08a })
+          );
+          lightBulb.position.set(0, y0 + storyH - 0.18, 0);
+          g.add(lightBulb);
+
+          // North & South Walls (at z = -hd and z = +hd)
+          [-hd, hd].forEach(function (wz) {
+            // Top Header Beam across wall
+            const header = new THREE.Mesh(new THREE.BoxGeometry(w, headerH, 0.35), wallMat);
+            header.position.set(0, y0 + storyH - headerH / 2, wz);
+            header.castShadow = true;
+            g.add(header);
+
+            if (f === 0) {
+              // Ground floor: Center Open Doorway (3.8m wide) + Left/Right Window Bays
+              const sideW = (w - 3.8) / 2;
+              [-hw + sideW / 2, hw - sideW / 2].forEach(function (sx) {
+                const lowerWall = new THREE.Mesh(new THREE.BoxGeometry(sideW, 1.2, 0.38), wallMat);
+                lowerWall.position.set(sx, y0 + 0.6, wz);
+                g.add(lowerWall);
+                // Collision box on ground-floor side walls so players enter via the doorway (or vault window)
+                collisionBoxes.push(
+                  new THREE.Box3(
+                    new THREE.Vector3(bx + sx - sideW / 2, 0, bz + wz - 0.3),
+                    new THREE.Vector3(bx + sx + sideW / 2, 2.2, bz + wz + 0.3)
+                  )
+                );
+              });
+              // Glowing Welcome Arch above Ground Floor Doorway
+              const doorArch = new THREE.Mesh(new THREE.BoxGeometry(4.0, 0.28, 0.5), frameMat);
+              doorArch.position.set(0, y0 + storyH - headerH, wz);
+              g.add(doorArch);
+            } else {
+              // Upper Floor: Low Sill + Center Mullion Pillar + 2 Wide Open Jump-Out Windows!
+              const sill = new THREE.Mesh(new THREE.BoxGeometry(w, sillH, 0.35), wallMat);
+              sill.position.set(0, y0 + sillH / 2, wz);
+              const mullion = new THREE.Mesh(new THREE.BoxGeometry(1.4, winH, 0.35), wallMat);
+              mullion.position.set(0, y0 + sillH + winH / 2, wz);
+              g.add(sill, mullion);
+
+              // Window Frames & Side Glass Trim for the 2 Open Windows
+              [-w * 0.24, w * 0.24].forEach(function (wx) {
+                const fTop = new THREE.Mesh(new THREE.BoxGeometry(3.6, 0.14, 0.42), frameMat);
+                fTop.position.set(wx, y0 + sillH + winH, wz);
+                const fBot = new THREE.Mesh(new THREE.BoxGeometry(3.6, 0.14, 0.48), frameMat);
+                fBot.position.set(wx, y0 + sillH, wz);
+                // Partial side glass panes leaving the center 2.8m of each window completely open to jump through!
+                const paneL = new THREE.Mesh(new THREE.BoxGeometry(0.55, winH, 0.08), glassMat);
+                paneL.position.set(wx - 1.5, y0 + sillH + winH / 2, wz);
+                const paneR = new THREE.Mesh(new THREE.BoxGeometry(0.55, winH, 0.08), glassMat);
+                paneR.position.set(wx + 1.5, y0 + sillH + winH / 2, wz);
+                g.add(fTop, fBot, paneL, paneR);
+              });
+            }
+          });
+
+          // East & West Walls (at x = -hw and x = +hw) — 2 Open Windows per Floor!
+          [-hw, hw].forEach(function (wx) {
+            const header = new THREE.Mesh(new THREE.BoxGeometry(0.35, headerH, d), wallMat);
+            header.position.set(wx, y0 + storyH - headerH / 2, 0);
+            const sill = new THREE.Mesh(new THREE.BoxGeometry(0.35, sillH, d), wallMat);
+            sill.position.set(wx, y0 + sillH / 2, 0);
+            const mullion = new THREE.Mesh(new THREE.BoxGeometry(0.35, winH, 1.5), wallMat);
+            mullion.position.set(wx, y0 + sillH + winH / 2, 0);
+            g.add(header, sill, mullion);
+
+            if (f === 0) {
+              // Ground floor side wall collider (1.1m tall so you can still jump out ground windows if you jump!)
+              collisionBoxes.push(
+                new THREE.Box3(
+                  new THREE.Vector3(bx + wx - 0.3, 0, bz - hd),
+                  new THREE.Vector3(bx + wx + 0.3, 1.1, bz + hd)
+                )
+              );
+            }
+
+            [-d * 0.24, d * 0.24].forEach(function (wz) {
+              const fTop = new THREE.Mesh(new THREE.BoxGeometry(0.42, 0.14, 3.6), frameMat);
+              fTop.position.set(wx, y0 + sillH + winH, wz);
+              const fBot = new THREE.Mesh(new THREE.BoxGeometry(0.48, 0.14, 3.6), frameMat);
+              fBot.position.set(wx, y0 + sillH, wz);
+              g.add(fTop, fBot);
+            });
+          });
+
+          // Upper Floor Walkable Slab + Interior Staircase from Floor f to Floor f+1
+          if (f > 0) {
+            // Walkable Floor Slab at y0 = f * storyH
+            // We leave a 3.2m stairwell cutout on the side where the staircase arrives from floor f-1
+            const stairSide = (f % 2 === 1) ? 1 : -1; // f=1 arrives on East (+x), f=2 arrives on West (-x), f=3 arrives on East (+x)
+            const mainSlabW = w - 3.6;
+            const mainSlabX = (stairSide === 1) ? -1.8 : 1.8;
+
+            const slabMesh = new THREE.Mesh(new THREE.BoxGeometry(mainSlabW, 0.28, d - 0.4), floorMat);
+            slabMesh.position.set(mainSlabX, y0 - 0.14, 0);
+            slabMesh.receiveShadow = true;
+            g.add(slabMesh);
+
+            // Register main floor slab in slantedRamps (isMultiFloor: true)
+            slantedRamps.push({
+              xMin: bx + mainSlabX - mainSlabW / 2,
+              xMax: bx + mainSlabX + mainSlabW / 2,
+              zMin: bz - hd + 0.2,
+              zMax: bz + hd - 0.2,
+              yStart: y0,
+              yEnd: y0,
+              dir: 'flat',
+              isMultiFloor: true
+            });
+
+            // Landing platform at the top of the staircase lane
+            const landZ = (f % 2 === 1) ? (-hd + 2.2) : (hd - 2.2);
+            const landX = stairSide * (hw - 1.9);
+            const landMesh = new THREE.Mesh(new THREE.BoxGeometry(3.4, 0.28, 4.0), floorMat);
+            landMesh.position.set(landX, y0 - 0.14, landZ);
+            g.add(landMesh);
+
+            slantedRamps.push({
+              xMin: bx + landX - 1.8,
+              xMax: bx + landX + 1.8,
+              zMin: bz + landZ - 2.1,
+              zMax: bz + landZ + 2.1,
+              yStart: y0,
+              yEnd: y0,
+              dir: 'flat',
+              isMultiFloor: true
+            });
+
+            // Interior Table & Rug on each Upper Floor
+            const rug = new THREE.Mesh(
+              new THREE.BoxGeometry(4.2, 0.04, 4.2),
+              new THREE.MeshStandardMaterial({ color: conf.roofColor || 0x3b82f6 })
+            );
+            rug.position.set(mainSlabX, y0 + 0.02, 0);
+            g.add(rug);
+          }
+
+          // Build Interior Slanted Staircase connecting Floor f (y0) to Floor f+1 (y0 + storyH)
+          if (f < floors - 1) {
+            const nextSide = ((f + 1) % 2 === 1) ? 1 : -1;
+            const stairX = nextSide * (hw - 1.9);
+            const zStart = -hd + 3.8;
+            const zEnd = hd - 3.8;
+            const runLen = zEnd - zStart;
+            const hyp = Math.sqrt(runLen * runLen + storyH * storyH);
+            const ang = Math.atan2(storyH, runLen);
+            const dir = ((f + 1) % 2 === 1) ? 'z-' : 'z+';
+
+            const stGroup = new THREE.Group();
+            stGroup.position.set(stairX, y0 + storyH / 2, 0);
+            stGroup.rotation.x = (dir === 'z-') ? ang : -ang;
+
+            const rampPlank = new THREE.Mesh(new THREE.BoxGeometry(3.1, 0.26, hyp), stairMat);
+            rampPlank.castShadow = true;
+            stGroup.add(rampPlank);
+
+            // Glowing Handrail
+            const rail = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.65, hyp), frameMat);
+            rail.position.set(-nextSide * 1.45, 0.4, 0);
+            stGroup.add(rail);
+            g.add(stGroup);
+
+            slantedRamps.push({
+              xMin: bx + stairX - 1.65,
+              xMax: bx + stairX + 1.65,
+              zMin: bz + zStart,
+              zMax: bz + zEnd,
+              yStart: y0,
+              yEnd: y0 + storyH,
+              dir: dir,
+              isMultiFloor: true
+            });
+          }
+        }
+
+        // Roof Parapet Trim & Open Skylight
+        const roofTrim = new THREE.Mesh(new THREE.BoxGeometry(w + 0.4, 0.5, d + 0.4), accentMat);
+        roofTrim.position.y = totalH + 0.25;
+        g.add(roofTrim);
+
+        scene.add(g);
+        return g;
+      }
+
+      // Build 14 Landmark Enterable Multi-Floor Buildings (2 to 4 Stories) with Open Jumpable Windows!
+      const enterableTowers = [
+        // Right around Central Plaza & Spawn so players can run inside and jump out of windows immediately!
+        { x: -26, z: -28, w: 15, d: 15, floors: 4, color: 0xe2e8f0, roofColor: 0x1e3a8a },
+        { x: 26, z: 28, w: 15, d: 15, floors: 4, color: 0xfef08a, roofColor: 0xb45309 },
+        { x: -16, z: 42, w: 14, d: 14, floors: 3, color: 0xcbd5e1, roofColor: 0x334155 },
+        { x: 16, z: 42, w: 14, d: 14, floors: 3, color: 0xbae6fd, roofColor: 0x0369a1 },
+        // Village & West District Enterable Houses / Manor
+        { x: -36, z: -15, w: 12, d: 12, floors: 2, color: 0xfecdd3, roofColor: 0x991b1b },
+        { x: -48, z: -8, w: 13, d: 13, floors: 3, color: 0xe2e8f0, roofColor: 0x1e3a8a },
+        { x: -35, z: 12, w: 12, d: 12, floors: 2, color: 0xfde68a, roofColor: 0x7c2d12 },
+        // Sky-Citadel, Airport, Harbor, Wonderland & Suburbia Multi-Floor Towers
+        { x: -24, z: 72, w: 16, d: 16, floors: 4, color: 0xddd6fe, roofColor: 0x4c1d95 },
+        { x: 24, z: 72, w: 15, d: 15, floors: 3, color: 0x99f6e4, roofColor: 0x065f46 },
+        { x: 54, z: -55, w: 14, d: 14, floors: 3, color: 0xe2e8f0, roofColor: 0x0284c7 },
+        { x: 162, z: 28, w: 15, d: 15, floors: 4, color: 0xfed7aa, roofColor: 0x9a3412 },
+        { x: -78, z: -96, w: 14, d: 14, floors: 3, color: 0xfbcfe8, roofColor: 0x9d174d },
+        { x: 205, z: -205, w: 16, d: 16, floors: 4, color: 0xbae6fd, roofColor: 0x1e40af },
+        { x: -205, z: 205, w: 16, d: 16, floors: 4, color: 0xd9f99d, roofColor: 0x166534 }
       ];
-      buildings.forEach(function (b) { scene.add(createBuilding(b)); });
+      enterableTowers.forEach(function (et) {
+        createEnterableMultiFloorBuilding(et);
+      });
 
       // Animated Windmill in West Village
       const windmill = new THREE.Group();
@@ -3030,9 +3560,22 @@
 
         houseGridCoords.forEach(function (hc) {
           const i = hc.idx;
-          const w = 6.5 + (i % 4) * 1.2;
-          const d = 6.0 + ((i + 1) % 3) * 1.2;
-          const h = 4.8 + (i % 5) * 1.6;
+          // Make every 2nd neighborhood house a Multi-Floor Walk-In Enterable House (2 or 3 stories) with interior stairs and open jump-out windows!
+          if (i % 2 === 0) {
+            createEnterableMultiFloorBuilding({
+              x: hc.x,
+              z: hc.z,
+              w: 12.5,
+              d: 12.5,
+              floors: (i % 4 === 0) ? 3 : 2,
+              color: wallPalette[i % wallPalette.length],
+              roofColor: roofPalette[i % roofPalette.length]
+            });
+            return;
+          }
+          const w = 7.0 + (i % 4) * 1.2;
+          const d = 6.5 + ((i + 1) % 3) * 1.2;
+          const h = 5.2 + (i % 5) * 1.8;
           const bGroup = createBuilding({
             x: hc.x,
             z: hc.z,
@@ -3432,6 +3975,368 @@
         };
       })();
 
+      // ==================== 14. ALL 13 DEVELOPER ROADMAP SYSTEMS ====================
+      let cameraControlMode = 'drag'; // 'drag' or 'mouse_move'
+      let cameraViewMode = 'third_person'; // 'third_person', 'first_person', 'cinematic'
+      let weatherMode = 'clear'; // 'clear', 'rain', 'snow', 'rainbow'
+      let skyTrain = null;
+      let weatherParticles = null;
+      let rainbowGroup = null;
+      const paintballs = [];
+      let grappleLine = null;
+      let grappleTarget = null;
+      let petMeshGroup = null;
+      let currentPetType = 'dragon';
+      const activeMeteors = [];
+
+      // Quest System State
+      const questsList = [
+        { id: 'q_shards', title: 'Mayor Aria: Collect 3 Aether Shards', goal: 3, progress: 0 },
+        { id: 'q_window', title: 'Sky Daredevil: Reach 9m+ Height & Jump/Glide', goal: 1, progress: 0 },
+        { id: 'q_blaster', title: 'Arena Sharpshooter: Fire 3 Paintball Orbs (G)', goal: 3, progress: 0 },
+        { id: 'q_builder', title: 'Master Architect: Build 2 Custom Ramps/Blocks (B)', goal: 2, progress: 0 }
+      ];
+      let currentQuestIdx = 0;
+
+      function advanceQuest(questId, amount) {
+        const q = questsList[currentQuestIdx];
+        if (!q || q.id !== questId) return;
+        q.progress = Math.min(q.goal, q.progress + (amount || 1));
+        updateQuestHUD();
+        if (q.progress >= q.goal) {
+          player1.score += 100;
+          player1.level = Math.max(1, Math.floor(player1.score / 100) + 1);
+          player1.updateNameplate();
+          sound.playCrown();
+          showToast('🏆 QUEST COMPLETE: ' + q.title + ' (+100 XP!)');
+          savePlayerProfile();
+          setTimeout(function () {
+            currentQuestIdx = (currentQuestIdx + 1) % questsList.length;
+            questsList[currentQuestIdx].progress = 0;
+            updateQuestHUD();
+          }, 1800);
+        }
+      }
+
+      function updateQuestHUD() {
+        const q = questsList[currentQuestIdx];
+        if (!q) return;
+        const tEl = document.getElementById('hud-quest-title');
+        const pEl = document.getElementById('hud-quest-progress');
+        const bEl = document.getElementById('hud-quest-bar');
+        if (tEl) tEl.textContent = q.title;
+        if (pEl) pEl.textContent = q.progress + ' / ' + q.goal;
+        if (bEl) bEl.style.width = Math.min(100, Math.round((q.progress / q.goal) * 100)) + '%';
+      }
+
+      // Time-Trial Race State
+      const raceCheckpoints = [
+        new THREE.Vector3(0, 1.5, -35),
+        new THREE.Vector3(0, 1.5, -85),
+        new THREE.Vector3(55, 1.5, -85),
+        new THREE.Vector3(85, 1.5, -35),
+        new THREE.Vector3(85, 1.5, 35),
+        new THREE.Vector3(35, 1.5, 85),
+        new THREE.Vector3(-35, 1.5, 85),
+        new THREE.Vector3(-35, 1.5, 0)
+      ];
+      const raceRingMeshes = [];
+      let raceActive = false;
+      let raceIndex = 0;
+      let raceStartTime = 0;
+
+      (function initRoadmapSystems() {
+        // 1. Elevated 3rd-Floor Monorail Sky-Train System (loops at r = 68m, y = 9.2m connecting skyscraper upper floors!)
+        const monorailRadius = 68;
+        const monorailY = 9.2;
+        const railTrack = new THREE.Mesh(
+          new THREE.RingGeometry(monorailRadius - 0.6, monorailRadius + 0.6, 64),
+          new THREE.MeshStandardMaterial({ color: 0x38bdf8, emissive: 0x0284c7, emissiveIntensity: 0.4, side: THREE.DoubleSide })
+        );
+        railTrack.rotation.x = -Math.PI / 2;
+        railTrack.position.y = monorailY;
+        scene.add(railTrack);
+
+        // Support Columns for Elevated Monorail
+        const colMat = new THREE.MeshStandardMaterial({ color: 0x334155, metalness: 0.6 });
+        for (let i = 0; i < 16; i++) {
+          const a = (i / 16) * Math.PI * 2;
+          const cx = Math.cos(a) * monorailRadius;
+          const cz = Math.sin(a) * monorailRadius;
+          if (Math.abs(cx) < 6 || Math.abs(cz) < 6) continue;
+          const pil = new THREE.Mesh(new THREE.CylinderGeometry(0.35, 0.45, monorailY, 10), colMat);
+          pil.position.set(cx, monorailY / 2, cz);
+          scene.add(pil);
+        }
+
+        // 2-Car Automated Neon Sky-Train
+        const trainGroup = new THREE.Group();
+        const tBodyMat = new THREE.MeshStandardMaterial({ color: 0xf8fafc, metalness: 0.5, roughness: 0.2 });
+        const tNeonMat = new THREE.MeshStandardMaterial({ color: 0x06b6d4, emissive: 0x06b6d4, emissiveIntensity: 0.8 });
+        [-2.8, 2.8].forEach(function (cz) {
+          const car = new THREE.Mesh(new THREE.BoxGeometry(2.6, 1.8, 4.8), tBodyMat);
+          car.position.set(0, 1.1, cz);
+          const stripe = new THREE.Mesh(new THREE.BoxGeometry(2.68, 0.25, 4.85), tNeonMat);
+          stripe.position.set(0, 1.1, cz);
+          trainGroup.add(car, stripe);
+        });
+        trainGroup.position.set(monorailRadius, monorailY, 0);
+        scene.add(trainGroup);
+
+        skyTrain = {
+          mesh: trainGroup,
+          position: trainGroup.position,
+          angle: 0,
+          radius: monorailRadius,
+          y: monorailY,
+          rotationYaw: 0,
+          rider: null
+        };
+
+        // 2. Giant 3D Sky Rainbow + Weather Particles (Rain / Snow)
+        rainbowGroup = new THREE.Group();
+        const rbColors = [0xef4444, 0xf97316, 0xfacc15, 0x22c55e, 0x06b6d4, 0x3b82f6, 0xa855f7];
+        rbColors.forEach(function (col, idx) {
+          const arc = new THREE.Mesh(
+            new THREE.TorusGeometry(240 - idx * 3.2, 1.5, 10, 64, Math.PI),
+            new THREE.MeshBasicMaterial({ color: col, transparent: true, opacity: 0.55 })
+          );
+          rainbowGroup.add(arc);
+        });
+        rainbowGroup.position.set(0, -10, -180);
+        rainbowGroup.visible = false;
+        scene.add(rainbowGroup);
+
+        const pGeo = new THREE.BufferGeometry();
+        const pCount = 450;
+        const pPositions = new Float32Array(pCount * 3);
+        for (let i = 0; i < pCount; i++) {
+          pPositions[i * 3] = (Math.random() - 0.5) * 140;
+          pPositions[i * 3 + 1] = Math.random() * 45;
+          pPositions[i * 3 + 2] = (Math.random() - 0.5) * 140;
+        }
+        pGeo.setAttribute('position', new THREE.BufferAttribute(pPositions, 3));
+        const pMat = new THREE.PointsMaterial({ color: 0xbae6fd, size: 0.45, transparent: true, opacity: 0.8 });
+        weatherParticles = new THREE.Points(pGeo, pMat);
+        weatherParticles.visible = false;
+        scene.add(weatherParticles);
+
+        // 3. 3D Pet Companion Mesh following Player 1
+        petMeshGroup = new THREE.Group();
+        scene.add(petMeshGroup);
+        rebuildPetMesh('dragon');
+
+        // 4. Time-Trial Race Checkpoint Rings
+        const raceMat = new THREE.MeshStandardMaterial({ color: 0x84cc16, emissive: 0x65a30d, emissiveIntensity: 0.8 });
+        raceCheckpoints.forEach(function (cp) {
+          const rMesh = new THREE.Mesh(new THREE.TorusGeometry(2.8, 0.24, 12, 24), raceMat);
+          rMesh.position.copy(cp);
+          rMesh.visible = false;
+          scene.add(rMesh);
+          raceRingMeshes.push(rMesh);
+        });
+
+        // 5. Named NPC Quest Givers with Floating Golden "!" Beacons
+        const npcProfiles = [
+          { name: 'Mayor Aria (!)', shirt: '#f43f5e', acc: 'crown', x: 0, z: 15 },
+          { name: 'Capt. Vance (!)', shirt: '#0284c7', acc: 'cap', x: 172, z: 6 },
+          { name: 'Pilot Maverick (!)', shirt: '#8b5cf6', acc: 'visor', x: 68, z: -45 },
+          { name: 'Archmage Sol (!)', shirt: '#f59e0b', acc: 'wizard', x: 132, z: -132 }
+        ];
+        npcProfiles.forEach(function (np, idx) {
+          const npc = new Character3D(
+            'npc_' + idx,
+            np.name,
+            { color: '#ffdbac', shirtColor: np.shirt, pantsColor: '#0f172a', avatarType: 'formal', accessory: np.acc },
+            new THREE.Vector3(np.x, 0, np.z),
+            true
+          );
+          scene.add(npc.mesh);
+        });
+      })();
+
+      function rebuildPetMesh(petType) {
+        currentPetType = petType;
+        if (!petMeshGroup) return;
+        while (petMeshGroup.children.length > 0) {
+          petMeshGroup.remove(petMeshGroup.children[0]);
+        }
+        if (petType === 'none') return;
+
+        if (petType === 'dragon') {
+          const dMat = new THREE.MeshStandardMaterial({ color: 0xf43f5e, emissive: 0xbe123c, emissiveIntensity: 0.3 });
+          const wingMat = new THREE.MeshStandardMaterial({ color: 0xfacc15, side: THREE.DoubleSide });
+          const body = new THREE.Mesh(new THREE.BoxGeometry(0.45, 0.35, 0.7), dMat);
+          const head = new THREE.Mesh(new THREE.BoxGeometry(0.35, 0.32, 0.4), dMat);
+          head.position.set(0, 0.2, 0.45);
+          const wL = new THREE.Mesh(new THREE.BoxGeometry(0.75, 0.05, 0.4), wingMat);
+          wL.position.set(-0.5, 0.15, 0);
+          const wR = new THREE.Mesh(new THREE.BoxGeometry(0.75, 0.05, 0.4), wingMat);
+          wR.position.set(0.5, 0.15, 0);
+          petMeshGroup.add(body, head, wL, wR);
+        } else if (petType === 'drone') {
+          const cMat = new THREE.MeshStandardMaterial({ color: 0x06b6d4, emissive: 0x06b6d4, emissiveIntensity: 0.7, metalness: 0.9 });
+          const core = new THREE.Mesh(new THREE.OctahedronGeometry(0.32, 1), cMat);
+          const ring = new THREE.Mesh(new THREE.TorusGeometry(0.5, 0.05, 8, 20), cMat);
+          ring.rotation.x = Math.PI / 2;
+          petMeshGroup.add(core, ring);
+        } else if (petType === 'pup') {
+          const pMat = new THREE.MeshStandardMaterial({ color: 0xf59e0b, roughness: 0.5 });
+          const body = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.35, 0.65), pMat);
+          const head = new THREE.Mesh(new THREE.BoxGeometry(0.36, 0.34, 0.36), pMat);
+          head.position.set(0, 0.22, 0.38);
+          petMeshGroup.add(body, head);
+        }
+      }
+
+      // Gadget 1: Fire Grappling Hook (KeyQ)
+      function fireGrapplingHook() {
+        if (player1.mountedInfo) unmountCharacter(player1);
+        const dirX = -Math.sin(cameraYaw);
+        const dirZ = -Math.cos(cameraYaw);
+        const targetPos = new THREE.Vector3(
+          player1.position.x + dirX * 22,
+          Math.max(player1.position.y + 11.5, 13.8),
+          player1.position.z + dirZ * 22
+        );
+        grappleTarget = targetPos;
+        if (grappleLine) scene.remove(grappleLine);
+        const lineGeo = new THREE.BufferGeometry().setFromPoints([
+          player1.position.clone().add(new THREE.Vector3(0, 1.4, 0)),
+          targetPos
+        ]);
+        grappleLine = new THREE.Line(
+          lineGeo,
+          new THREE.LineBasicMaterial({ color: 0x22d3ee, linewidth: 3 })
+        );
+        scene.add(grappleLine);
+        player1.velocity.set(dirX * 24, 17.5, dirZ * 24);
+        player1.isGrounded = false;
+        sound.playJumpPad();
+        showToast('🪝 Grappling Hook Fired! Hold [Space] at peak to deploy Glider Wing!');
+        setTimeout(function () {
+          if (grappleLine) {
+            scene.remove(grappleLine);
+            grappleLine = null;
+          }
+        }, 650);
+      }
+
+      // Gadget 2: Fire Friendly Paintball / Energy Blaster (KeyG)
+      function firePaintballBlaster() {
+        const colors = [0xf43f5e, 0x06b6d4, 0xfacc15, 0xa855f7, 0x22c55e];
+        const col = colors[Math.floor(Math.random() * colors.length)];
+        const orb = new THREE.Mesh(
+          new THREE.SphereGeometry(0.24, 10, 10),
+          new THREE.MeshBasicMaterial({ color: col })
+        );
+        const yaw = player1.rotationYaw;
+        orb.position.set(
+          player1.position.x + Math.sin(yaw) * 0.9,
+          player1.position.y + 1.35,
+          player1.position.z + Math.cos(yaw) * 0.9
+        );
+        scene.add(orb);
+        paintballs.push({
+          mesh: orb,
+          color: col,
+          vel: new THREE.Vector3(Math.sin(yaw) * 44, 1.2, Math.cos(yaw) * 44),
+          life: 1.8
+        });
+        sound.playDash();
+        advanceQuest('q_blaster', 1);
+      }
+
+      // Gadget 3: Sandbox Block & Stunt Ramp Builder (KeyB)
+      function spawnCustomBuilderBlock() {
+        const yaw = player1.rotationYaw;
+        const bx = Math.round(player1.position.x + Math.sin(yaw) * 5.5);
+        const bz = Math.round(player1.position.z + Math.cos(yaw) * 5.5);
+        const by = getSlopeHeight(bx, bz, player1.position.y);
+        addSlantedRampMesh(bx - 2.5, bx + 2.5, bz - 4.0, bz + 4.0, by, by + 3.2, 'z+', 0x06b6d4);
+        spawnBurst(new THREE.Vector3(bx, by + 1.5, bz), 0x22d3ee);
+        sound.playCrown();
+        player1.score += 10;
+        player1.updateNameplate();
+        advanceQuest('q_builder', 1);
+        showToast('🧱 Built a Custom 3D Neon Stunt Ramp at (' + bx + ', ' + bz + ')!');
+      }
+
+      // World Event: Trigger Aether Meteor Shower
+      function triggerMeteorShower() {
+        showToast('☄️ AETHER METEOR SHOWER INCOMING! Look for 100-XP Mega Meteor Shards!');
+        sound.playCrown();
+        for (let i = 0; i < 5; i++) {
+          const mx = player1.position.x + (Math.random() - 0.5) * 70;
+          const mz = player1.position.z + (Math.random() - 0.5) * 70;
+          const meteorMesh = new THREE.Mesh(
+            new THREE.DodecahedronGeometry(1.4, 0),
+            new THREE.MeshStandardMaterial({ color: 0xf97316, emissive: 0xdc2626, emissiveIntensity: 0.9 })
+          );
+          meteorMesh.position.set(mx + 20, 55 + i * 12, mz - 20);
+          scene.add(meteorMesh);
+          activeMeteors.push({
+            mesh: meteorMesh,
+            targetX: mx,
+            targetZ: mz
+          });
+        }
+      }
+
+      // Persistent Player Profile Save / Load (localStorage wrapped in try/catch)
+      function savePlayerProfile() {
+        try {
+          const data = {
+            username: player1.username,
+            score: player1.score,
+            level: player1.level,
+            appearance: player1.appearance,
+            cameraControlMode: cameraControlMode,
+            petType: currentPetType,
+            perkSpeedBoots: !!player1.perkSpeedBoots,
+            perkMoonJump: !!player1.perkMoonJump,
+            perkRainbowTrail: !!player1.perkRainbowTrail
+          };
+          window.localStorage.setItem('polyworld_save_v1', JSON.stringify(data));
+        } catch (e) {}
+      }
+
+      function loadPlayerProfile() {
+        try {
+          const raw = window.localStorage.getItem('polyworld_save_v1');
+          if (!raw) return;
+          const data = JSON.parse(raw);
+          if (data.username) {
+            customization.username = data.username;
+            player1.username = data.username;
+            const inp = document.getElementById('input-username');
+            if (inp) inp.value = data.username;
+          }
+          if (typeof data.score === 'number') player1.score = data.score;
+          if (typeof data.level === 'number') player1.level = data.level;
+          if (data.appearance) {
+            Object.assign(customization, data.appearance);
+            Object.assign(player1.appearance, data.appearance);
+            player1.buildRig();
+          }
+          if (data.cameraControlMode) {
+            cameraControlMode = data.cameraControlMode;
+            const sel = document.getElementById('select-camera-mode');
+            if (sel) sel.value = cameraControlMode;
+          }
+          if (data.petType) {
+            currentPetType = data.petType;
+            rebuildPetMesh(currentPetType);
+            const pSel = document.getElementById('select-pet-type');
+            if (pSel) pSel.value = currentPetType;
+          }
+          player1.perkSpeedBoots = !!data.perkSpeedBoots;
+          player1.perkMoonJump = !!data.perkMoonJump;
+          player1.perkRainbowTrail = !!data.perkRainbowTrail;
+          player1.updateNameplate();
+        } catch (e) {}
+      }
+
       // Street Lamps
       [
         { x: -5, z: 12 }, { x: 5, z: 12 },
@@ -3514,7 +4419,18 @@
         { x: 95, y: 1.0, z: -95, type: 'cyan' },
         { x: 140, y: 1.5, z: -140, type: 'amethyst' },
         { x: -95, y: 1.0, z: 95, type: 'cyan' },
-        { x: -140, y: 1.5, z: 140, type: 'amethyst' }
+        { x: -140, y: 1.5, z: 140, type: 'amethyst' },
+        // Upper-Floor Window Shards inside the Enterable Multi-Floor Towers!
+        { x: -26, y: 5.6, z: -21, type: 'gold' },
+        { x: -26, y: 10.2, z: -21, type: 'gold' },
+        { x: -26, y: 14.8, z: -21, type: 'amethyst' },
+        { x: 26, y: 5.6, z: 21, type: 'gold' },
+        { x: 26, y: 10.2, z: 21, type: 'gold' },
+        { x: 26, y: 14.8, z: 21, type: 'amethyst' },
+        { x: -16, y: 5.6, z: 36, type: 'gold' },
+        { x: -16, y: 10.2, z: 36, type: 'amethyst' },
+        { x: 16, y: 5.6, z: 36, type: 'gold' },
+        { x: 16, y: 10.2, z: 36, type: 'amethyst' }
       ];
 
       crystalSpots.forEach(function (s, idx) {
@@ -3671,6 +4587,11 @@
           info.gondola.rider = null;
           char.position.set(info.ref.position.x, 0, info.ref.position.z + 6.0);
           showToast('🎡 Stepped off the Giant Ferris Wheel');
+        } else if (info.kind === 'skytrain' && info.ref) {
+          info.ref.rider = null;
+          char.position.set(info.ref.position.x, info.ref.y + 0.5, info.ref.position.z);
+          char.isGrounded = false;
+          showToast('🚈 Stepped off the Elevated Sky-Train!');
         } else if (info.kind === 'heli' && info.ref) {
           info.ref.pilot = null;
           info.ref.speed = 0;
@@ -4180,6 +5101,8 @@
 
             if (!isAI) {
               sound.playCollect(item.value);
+              advanceQuest('q_shards', 1);
+              savePlayerProfile();
               if (socket && socket.connected) {
                 socket.emit('collect_item', { itemId: id });
               }
@@ -4273,14 +5196,29 @@
       window.addEventListener('mouseup', function () {
         isPointerDown = false;
       });
+      loadPlayerProfile();
+      let hasMouseInit = false;
       window.addEventListener('mousemove', function (e) {
-        if (!isPointerDown) return;
+        if (!hasMouseInit) {
+          prevMouseX = e.clientX;
+          prevMouseY = e.clientY;
+          hasMouseInit = true;
+          return;
+        }
         const dx = e.clientX - prevMouseX;
         const dy = e.clientY - prevMouseY;
         prevMouseX = e.clientX;
         prevMouseY = e.clientY;
-        cameraYaw -= dx * 0.004;
-        cameraPitch = THREE.MathUtils.clamp(cameraPitch + dy * 0.004, 0.08, Math.PI / 2.3);
+
+        if (inLobby) return;
+        const tag = e.target && e.target.tagName;
+        if (tag === 'INPUT' || tag === 'SELECT' || tag === 'BUTTON' || tag === 'TEXTAREA') return;
+
+        // Rotate camera if dragging OR if user selected Free Mouse-Move mode!
+        if (isPointerDown || cameraControlMode === 'mouse_move') {
+          cameraYaw -= dx * 0.0042;
+          cameraPitch = THREE.MathUtils.clamp(cameraPitch + dy * 0.0042, -0.25, Math.PI / 2.25);
+        }
       });
       renderer.domElement.addEventListener('wheel', function (e) {
         targetDist = THREE.MathUtils.clamp(targetDist + Math.sign(e.deltaY) * 0.7, 3.5, 15.0);
@@ -4305,6 +5243,31 @@
           case 'Digit4': triggerEmote(p1Input.emote === 'sit' ? null : 'sit'); break;
           case 'KeyE':
             interactNearest(player1);
+            break;
+          case 'KeyQ':
+            fireGrapplingHook();
+            break;
+          case 'KeyG':
+            firePaintballBlaster();
+            break;
+          case 'KeyJ':
+            player1.jetpackActive = !player1.jetpackActive;
+            sound.playEmote();
+            showToast(player1.jetpackActive ? '🚀 Jetpack ON! Hold [Space] to fly!' : '🚀 Jetpack OFF');
+            break;
+          case 'KeyH':
+            player1.hoverboardActive = !player1.hoverboardActive;
+            sound.playEmote();
+            showToast(player1.hoverboardActive ? '🛹 Neon Street Hoverboard ON!' : '🛹 Hoverboard OFF');
+            break;
+          case 'KeyB':
+            spawnCustomBuilderBlock();
+            break;
+          case 'KeyM':
+            toggleCameraControlMode();
+            break;
+          case 'KeyV':
+            cycleCameraViewMode();
             break;
           case 'KeyU':
             if (splitScreenEnabled && player2) interactNearest(player2);
@@ -4545,6 +5508,12 @@
         badge.textContent = player1.username.charAt(0).toUpperCase();
         badge.style.backgroundColor = customization.shirtColor;
 
+        const chosenCamMode = document.getElementById('select-camera-mode').value || 'drag';
+        setCameraControlMode(chosenCamMode);
+        const chosenPet = document.getElementById('select-pet-type').value || 'dragon';
+        rebuildPetMesh(chosenPet);
+        savePlayerProfile();
+
         document.getElementById('lobby-overlay').classList.add('hidden');
         document.getElementById('hud-overlay').classList.remove('hidden');
         inLobby = false;
@@ -4709,6 +5678,175 @@
         sound.playJump();
         showToast('🧭 Teleported to Central Plaza');
       });
+
+      function setCameraControlMode(mode) {
+        cameraControlMode = (mode === 'mouse_move') ? 'mouse_move' : 'drag';
+        const btn = document.getElementById('btn-camera-mode');
+        if (btn) {
+          btn.textContent = (cameraControlMode === 'mouse_move') ? '🎯 Cam: Mouse Move' : '🖱️ Cam: Drag';
+        }
+        const sel = document.getElementById('select-camera-mode');
+        if (sel) sel.value = cameraControlMode;
+        savePlayerProfile();
+      }
+
+      function toggleCameraControlMode() {
+        const next = (cameraControlMode === 'drag') ? 'mouse_move' : 'drag';
+        setCameraControlMode(next);
+        showToast(next === 'mouse_move'
+          ? '🎯 Camera Mode: Free Mouse Move (Camera follows cursor automatically!)'
+          : '🖱️ Camera Mode: Normal Drag & Move (Hold click to orbit camera)');
+      }
+
+      function cycleCameraViewMode() {
+        const order = ['third_person', 'first_person', 'cinematic'];
+        cameraViewMode = order[(order.indexOf(cameraViewMode) + 1) % order.length];
+        const btn = document.getElementById('btn-camera-view');
+        if (cameraViewMode === 'first_person') {
+          if (btn) btn.textContent = '👁️ 1st-Person';
+          targetDist = 0.2;
+          if (player1.headGroup) player1.headGroup.visible = false;
+          showToast('👁️ Switched to 1st-Person View (Shortcut: V)');
+        } else if (cameraViewMode === 'cinematic') {
+          if (btn) btn.textContent = '🎬 Wide View';
+          targetDist = 13.5;
+          if (player1.headGroup) player1.headGroup.visible = true;
+          showToast('🎬 Switched to Wide Cinematic Camera');
+        } else {
+          if (btn) btn.textContent = '🎥 3rd-Person';
+          targetDist = 7.0;
+          if (player1.headGroup) player1.headGroup.visible = true;
+          showToast('🎥 Switched to 3rd-Person Orbit Camera');
+        }
+      }
+
+      document.getElementById('btn-camera-mode').addEventListener('click', toggleCameraControlMode);
+      document.getElementById('btn-camera-view').addEventListener('click', cycleCameraViewMode);
+
+      document.getElementById('btn-board-skytrain').addEventListener('click', function () {
+        if (player1.mountedInfo && player1.mountedInfo.kind === 'skytrain') {
+          unmountCharacter(player1);
+          return;
+        }
+        if (player1.mountedInfo) unmountCharacter(player1);
+        if (skyTrain) {
+          skyTrain.rider = player1;
+          player1.mountedInfo = { kind: 'skytrain', ref: skyTrain };
+          player1.currentAnimation = 'sit';
+          sound.playCrown();
+          showToast('🚈 Boarded the Elevated 3rd-Floor Monorail Sky-Train! Press [E] to step off onto any skyscraper!');
+        }
+      });
+
+      document.getElementById('btn-cycle-weather').addEventListener('click', function () {
+        const modes = ['clear', 'rain', 'snow', 'rainbow'];
+        weatherMode = modes[(modes.indexOf(weatherMode) + 1) % modes.length];
+        const btn = document.getElementById('btn-cycle-weather');
+        if (weatherMode === 'clear') {
+          btn.textContent = '🌦️ Clear';
+          if (weatherParticles) weatherParticles.visible = false;
+          if (rainbowGroup) rainbowGroup.visible = false;
+        } else if (weatherMode === 'rain') {
+          btn.textContent = '🌧️ Rain';
+          if (weatherParticles) {
+            weatherParticles.visible = true;
+            weatherParticles.material.color.setHex(0x38bdf8);
+          }
+          if (rainbowGroup) rainbowGroup.visible = false;
+          showToast('🌧️ Dynamic Rainstorm Activated!');
+        } else if (weatherMode === 'snow') {
+          btn.textContent = '❄️ Snow';
+          if (weatherParticles) {
+            weatherParticles.visible = true;
+            weatherParticles.material.color.setHex(0xffffff);
+          }
+          if (rainbowGroup) rainbowGroup.visible = false;
+          showToast('❄️ Alpine Snowfall Activated!');
+        } else {
+          btn.textContent = '🌈 Rainbow';
+          if (weatherParticles) weatherParticles.visible = false;
+          if (rainbowGroup) rainbowGroup.visible = true;
+          showToast('🌈 Giant 3D Sky Rainbow Appeared!');
+        }
+      });
+
+      document.getElementById('btn-meteor-event').addEventListener('click', triggerMeteorShower);
+
+      document.getElementById('btn-start-race').addEventListener('click', function () {
+        raceActive = !raceActive;
+        raceIndex = 0;
+        raceStartTime = performance.now();
+        const timerEl = document.getElementById('hud-race-timer');
+        raceRingMeshes.forEach(function (m, idx) {
+          m.visible = raceActive;
+          m.scale.setScalar(idx === 0 ? 1.35 : 0.85);
+        });
+        if (raceActive) {
+          if (timerEl) timerEl.classList.remove('hidden');
+          player1.position.set(0, 0.5, -18);
+          sound.playCrown();
+          showToast('🏁 TIME-TRIAL RACE STARTED! Pass through all 8 Glowing Green Checkpoints!');
+        } else {
+          if (timerEl) timerEl.classList.add('hidden');
+          showToast('🏁 Time-Trial Race Stopped');
+        }
+      });
+
+      document.getElementById('btn-new-quest').addEventListener('click', function () {
+        currentQuestIdx = (currentQuestIdx + 1) % questsList.length;
+        updateQuestHUD();
+        sound.playEmote();
+        showToast('📜 Switched Active Quest: ' + questsList[currentQuestIdx].title);
+      });
+
+      // Shop Modal Controls
+      document.getElementById('btn-open-shop').addEventListener('click', function () {
+        document.getElementById('shop-modal').classList.remove('hidden');
+      });
+      document.getElementById('btn-close-shop').addEventListener('click', function () {
+        document.getElementById('shop-modal').classList.add('hidden');
+      });
+      document.getElementById('btn-buy-speed').addEventListener('click', function () {
+        player1.perkSpeedBoots = !player1.perkSpeedBoots;
+        sound.playCrown();
+        savePlayerProfile();
+        showToast(player1.perkSpeedBoots ? '⚡ Hyper-Speed Boots Equipped (+32% Speed)!' : '⚡ Hyper-Speed Boots Unequipped');
+      });
+      document.getElementById('btn-buy-jump').addEventListener('click', function () {
+        player1.perkMoonJump = !player1.perkMoonJump;
+        sound.playCrown();
+        savePlayerProfile();
+        showToast(player1.perkMoonJump ? '🦘 Moon-Gravity Jump Equipped (+35% Jump)!' : '🦘 Moon-Gravity Jump Unequipped');
+      });
+      document.getElementById('btn-buy-trail').addEventListener('click', function () {
+        player1.perkRainbowTrail = !player1.perkRainbowTrail;
+        sound.playCrown();
+        savePlayerProfile();
+        showToast(player1.perkRainbowTrail ? '🌈 Rainbow Particle Trail Activated!' : '🌈 Rainbow Trail Disabled');
+      });
+      document.getElementById('btn-cycle-pet').addEventListener('click', function () {
+        const pets = ['dragon', 'drone', 'pup', 'none'];
+        const nextPet = pets[(pets.indexOf(currentPetType) + 1) % pets.length];
+        rebuildPetMesh(nextPet);
+        sound.playEmote();
+        savePlayerProfile();
+        showToast('🐉 Switched 3D Pet Companion to: ' + nextPet.toUpperCase());
+      });
+
+      // Bottom Gadget Bar Buttons
+      document.getElementById('btn-gadget-grapple').addEventListener('click', fireGrapplingHook);
+      document.getElementById('btn-gadget-blaster').addEventListener('click', firePaintballBlaster);
+      document.getElementById('btn-gadget-jetpack').addEventListener('click', function () {
+        player1.jetpackActive = !player1.jetpackActive;
+        sound.playEmote();
+        showToast(player1.jetpackActive ? '🚀 Jetpack ON! Hold [Space] to fly!' : '🚀 Jetpack OFF');
+      });
+      document.getElementById('btn-gadget-hoverboard').addEventListener('click', function () {
+        player1.hoverboardActive = !player1.hoverboardActive;
+        sound.playEmote();
+        showToast(player1.hoverboardActive ? '🛹 Neon Street Hoverboard ON!' : '🛹 Hoverboard OFF');
+      });
+      document.getElementById('btn-gadget-build').addEventListener('click', spawnCustomBuilderBlock);
 
       document.getElementById('btn-open-lobby').addEventListener('click', function () {
         inLobby = true;
@@ -4926,6 +6064,17 @@
       let crownScoreAccum = 0;
 
       function updateCamera(cam, targetChar, yaw, pitch, dist, delta) {
+        if (cameraViewMode === 'first_person' && targetChar === player1 && !inLobby) {
+          const eyePos = targetChar.position.clone().add(new THREE.Vector3(0, 1.85, 0));
+          cam.position.copy(eyePos);
+          const lookTarget = new THREE.Vector3(
+            eyePos.x - Math.sin(yaw) * Math.cos(pitch) * 20,
+            eyePos.y - Math.sin(pitch) * 20,
+            eyePos.z - Math.cos(yaw) * Math.cos(pitch) * 20
+          );
+          cam.lookAt(lookTarget);
+          return;
+        }
         const target = targetChar.position.clone().add(new THREE.Vector3(0, 1.55, 0));
         const hDist = dist * Math.cos(pitch);
         const vDist = dist * Math.sin(pitch);
@@ -5111,6 +6260,39 @@
               car.speed *= -0.25;
               nextX = car.position.x;
               nextZ = car.position.z;
+            }
+
+            // Enforce strict Vehicle-to-Building & Wall Collisions (Cars NEVER pass through buildings!)
+            const carRadius = 1.35;
+            const carBox = new THREE.Box3(
+              new THREE.Vector3(nextX - carRadius, car.position.y + 0.15, nextZ - carRadius),
+              new THREE.Vector3(nextX + carRadius, car.position.y + 1.8, nextZ + carRadius)
+            );
+            const allBuildingBoxes = collisionBoxes.concat(vehicleBlockerBoxes);
+            for (let bIdx = 0; bIdx < allBuildingBoxes.length; bIdx++) {
+              const box = allBuildingBoxes[bIdx];
+              if (carBox.intersectsBox(box)) {
+                // Allow landing on top of flat roofs if airborne above the building
+                if (car.position.y >= box.max.y - 0.35 && (car.velocityY || 0) <= 0) {
+                  continue;
+                }
+                const testCarX = new THREE.Box3(
+                  new THREE.Vector3(nextX - carRadius, car.position.y + 0.15, car.position.z - carRadius),
+                  new THREE.Vector3(nextX + carRadius, car.position.y + 1.8, car.position.z + carRadius)
+                );
+                if (testCarX.intersectsBox(box)) {
+                  nextX = car.position.x;
+                }
+                const testCarZ = new THREE.Box3(
+                  new THREE.Vector3(car.position.x - carRadius, car.position.y + 0.15, nextZ - carRadius),
+                  new THREE.Vector3(car.position.x + carRadius, car.position.y + 1.8, nextZ + carRadius)
+                );
+                if (testCarZ.intersectsBox(box)) {
+                  nextZ = car.position.z;
+                }
+                car.speed *= -0.3;
+                break;
+              }
             }
 
             const maxB = WORLD.MAP_SIZE / 2 - 4;
@@ -5605,6 +6787,146 @@
 
         for (let d = 0; d < discoFloorTiles.length; d++) {
           discoFloorTiles[d].emissiveIntensity = 0.35 + Math.sin(elapsed * 5 + d) * 0.35;
+        }
+
+        // Check Sky Daredevil Quest (reaching 9m+ height on upper floors / roofs / planes)
+        if (player1.position.y > 9.0) {
+          advanceQuest('q_window', 1);
+        }
+
+        // Rainbow Particle Trail Perk
+        if (player1.perkRainbowTrail && (Math.abs(player1.velocity.x) > 1 || Math.abs(player1.velocity.z) > 1 || player1.mountedInfo)) {
+          if (Math.random() < 0.35) {
+            const trailCols = [0xef4444, 0xfacc15, 0x22c55e, 0x06b6d4, 0xa855f7];
+            const tc = trailCols[Math.floor(Math.random() * trailCols.length)];
+            const m = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.18, 0.18), new THREE.MeshBasicMaterial({ color: tc }));
+            m.position.copy(player1.position).add(new THREE.Vector3(0, 0.4, 0));
+            scene.add(m);
+            burstParticles.push({ mesh: m, vel: new THREE.Vector3(0, 1.5, 0), life: 0.45 });
+          }
+        }
+
+        // Update Elevated Monorail Sky-Train
+        if (skyTrain) {
+          skyTrain.angle += delta * 0.26;
+          skyTrain.position.x = Math.cos(skyTrain.angle) * skyTrain.radius;
+          skyTrain.position.z = Math.sin(skyTrain.angle) * skyTrain.radius;
+          skyTrain.rotationYaw = -skyTrain.angle;
+          skyTrain.mesh.rotation.y = skyTrain.rotationYaw;
+          if (skyTrain.rider) {
+            skyTrain.rider.position.set(skyTrain.position.x, skyTrain.y + 1.2, skyTrain.position.z);
+            skyTrain.rider.mesh.position.copy(skyTrain.rider.position);
+            skyTrain.rider.rotationYaw = skyTrain.rotationYaw;
+            skyTrain.rider.mesh.rotation.y = skyTrain.rotationYaw;
+          }
+        }
+
+        // Update 3D Pet Companion following Player 1
+        if (petMeshGroup && currentPetType !== 'none') {
+          const petOffset = new THREE.Vector3(-1.15, 1.45 + Math.sin(elapsed * 4.2) * 0.22, -1.15);
+          petOffset.applyAxisAngle(new THREE.Vector3(0, 1, 0), player1.rotationYaw);
+          petMeshGroup.position.lerp(player1.position.clone().add(petOffset), Math.min(1, delta * 8));
+          petMeshGroup.rotation.y = player1.rotationYaw;
+        }
+
+        // Update Weather Particles (Rain / Snow) centered around Player 1
+        if (weatherParticles && weatherParticles.visible) {
+          const posArr = weatherParticles.geometry.attributes.position.array;
+          const fallSpd = (weatherMode === 'rain') ? 26.0 : 6.5;
+          for (let i = 0; i < posArr.length; i += 3) {
+            posArr[i + 1] -= fallSpd * delta;
+            if (posArr[i + 1] < 0) {
+              posArr[i] = player1.position.x + (Math.random() - 0.5) * 110;
+              posArr[i + 1] = 38 + Math.random() * 10;
+              posArr[i + 2] = player1.position.z + (Math.random() - 0.5) * 110;
+            }
+          }
+          weatherParticles.geometry.attributes.position.needsUpdate = true;
+        }
+
+        // Update Paintball Blaster Projectiles
+        for (let i = paintballs.length - 1; i >= 0; i--) {
+          const pb = paintballs[i];
+          pb.life -= delta;
+          pb.mesh.position.addScaledVector(pb.vel, delta);
+          pb.vel.y -= 6.0 * delta;
+
+          let hit = false;
+          aiBots.forEach(function (bot) {
+            if (pb.mesh.position.distanceTo(bot.position.clone().add(new THREE.Vector3(0, 1.1, 0))) < 1.3) {
+              hit = true;
+              bot.targetPosition.addScaledVector(pb.vel.clone().normalize(), 3.5);
+              player1.score += 15;
+              player1.updateNameplate();
+              showToast('🎯 Paintball Tag on ' + bot.username + '! (+15 XP)');
+            }
+          });
+
+          if (hit || pb.mesh.position.y <= 0.2 || pb.life <= 0) {
+            if (hit || pb.mesh.position.y <= 0.2) {
+              spawnBurst(pb.mesh.position.clone(), pb.color);
+            }
+            scene.remove(pb.mesh);
+            paintballs.splice(i, 1);
+          }
+        }
+
+        // Update Aether Meteors
+        for (let m = activeMeteors.length - 1; m >= 0; m--) {
+          const mt = activeMeteors[m];
+          mt.mesh.position.x = THREE.MathUtils.lerp(mt.mesh.position.x, mt.targetX, delta * 2.5);
+          mt.mesh.position.z = THREE.MathUtils.lerp(mt.mesh.position.z, mt.targetZ, delta * 2.5);
+          mt.mesh.position.y -= 28.0 * delta;
+          mt.mesh.rotation.x += delta * 5;
+          if (mt.mesh.position.y <= 1.2) {
+            spawnBurst(new THREE.Vector3(mt.targetX, 1.5, mt.targetZ), 0xf97316);
+            sound.playJumpPad();
+            // Spawn a temporary 100-XP Mega Crystal at meteor impact site!
+            const megaId = 'meteor_shard_' + Date.now() + '_' + m;
+            collectibles.set(megaId, {
+              id: megaId,
+              type: 'amethyst',
+              position: { x: mt.targetX, y: 1.4, z: mt.targetZ },
+              value: 100,
+              active: true
+            });
+            const mGem = new THREE.Mesh(
+              new THREE.OctahedronGeometry(0.95, 0),
+              new THREE.MeshStandardMaterial({ color: 0xf97316, emissive: 0xef4444, emissiveIntensity: 0.8 })
+            );
+            mGem.position.set(mt.targetX, 1.4, mt.targetZ);
+            scene.add(mGem);
+            collectibleMeshes.set(megaId, mGem);
+
+            scene.remove(mt.mesh);
+            activeMeteors.splice(m, 1);
+          }
+        }
+
+        // Update Time-Trial Race Checkpoints
+        if (raceActive) {
+          const elapsedRace = ((performance.now() - raceStartTime) / 1000).toFixed(1);
+          const timerEl = document.getElementById('hud-race-timer');
+          if (timerEl) {
+            timerEl.textContent = '🏁 Race: ' + elapsedRace + 's (CP ' + (raceIndex + 1) + '/' + raceCheckpoints.length + ')';
+          }
+          const targetCP = raceCheckpoints[raceIndex];
+          if (targetCP && Math.hypot(player1.position.x - targetCP.x, player1.position.z - targetCP.z) < 6.5) {
+            sound.playCollect(50);
+            raceRingMeshes[raceIndex].visible = false;
+            raceIndex++;
+            if (raceIndex >= raceCheckpoints.length) {
+              raceActive = false;
+              if (timerEl) timerEl.classList.add('hidden');
+              player1.score += 150;
+              player1.updateNameplate();
+              sound.playCrown();
+              showToast('🏆 TIME-TRIAL FINISHED in ' + elapsedRace + 's! (+150 XP Trophy!)');
+              savePlayerProfile();
+            } else {
+              raceRingMeshes[raceIndex].scale.setScalar(1.35);
+            }
+          }
         }
 
         // Update Animated World Props

@@ -24,8 +24,17 @@
 - **Controllable 3D Aeroplanes & Rescue Helicopter**: Take off from **Aether Airport (`75, -55`)** in the **Skyhawk Turbo Biplane** or lift off vertically from the **Helipad (`28, -28`)** in the **Rescue Helicopter** (`Space` to climb, `Shift` to descend, `WASD` to bank & turn).
 - **Controllable Speedboats & Navigable Water Canal**: Pilot speedboats across **Serene Crystal Lake**, through the bridged **Water Canal**, and out to **Coral Harbor Bay** (with strict water/land shoreline boundaries).
 
+### 🪝 Action Gadgets, Sky-Train, Weather, Quests, Pets & Builder Mode
+- **Camera Mouse Mode Option (`KeyM`) & 1st/3rd-Person View (`KeyV`)**: Choose between **Drag & Move Orbit** or **Free Mouse Move (Auto-Look)** in the Lobby or HUD, and switch between 3rd-Person, **1st-Person Cockpit/Eyes**, and Wide Cinematic views.
+- **Grappling Hook (`KeyQ`) & Mid-Air Glider Parachute**: Fire a 3D grappling tether onto rooftops, and hold `Space` while falling from upper-floor windows or aircraft to unfold a 3D Hang-Glider wing.
+- **Friendly Paintball Blaster (`KeyG`), Jetpack (`KeyJ`), & Street Hoverboard (`KeyH`)**: Tag rivals with colorful paintball orbs, fly with twin thruster flames, or cruise on a neon hoverboard.
+- **Elevated 3rd-Floor Monorail Sky-Train (`🚈 Sky-Train`)**: Ride an automated 2-car neon sky-train looping at `y = 9.2m` around the skyscraper skyline.
+- **Dynamic Weather (`🌦️ Clear / Rain / Snow / Rainbow`) & Aether Meteor Showers (`☄️ Meteor`)**: Toggle 3D rain, snow flurries, a giant 7-band 3D sky rainbow, or summon meteor showers that drop 100-XP Mega Shards.
+- **NPC Quest Givers (`📜 Quests`), Time-Trial Race (`🏁 Time Trial`), Upgrade Shop (`🛒 Shop`), 3D Pets & Sandbox Builder (`KeyB`)**: Complete quests from 4 named NPCs, race through 8 checkpoints, equip a 3D Dragon/Drone/Pup pet, unlock Speed Boots/Moon Jump/Rainbow Trails (auto-saved in `localStorage`), and place custom 3D stunt ramps in the world.
+
 ### 🎮 Interactive Mini-Games, Playground Rides & Dense Neighborhoods
-- **65+ Neighborhood Houses & 70+ 3D Sculptures**: Residential streets, cottages, villas, modern lofts, rotating torus knots, polyhedron monuments, wind turbines, and floating hot air balloons.
+- **40+ Enterable Multi-Floor Towers & Walk-In Houses**: Run inside 2-, 3-, and 4-story buildings through open ground-floor doorways, climb interior staircases to upper floors, collect indoor Aether Shards, and **jump right out of the 3D upper-floor windows**!
+- **65+ Neighborhood Houses & 70+ 3D Sculptures**: Full vehicle-to-building collision physics, residential streets, cottages, villas, modern lofts, rotating torus knots, polyhedron monuments, wind turbines, and floating hot air balloons.
 - **Interactive Sports & Arcade Zones**:
   - ⚽ **Town Soccer Stadium (`-60, 65`)**: Kick or bump the physics-enabled 3D Soccer Ball into the goalposts for `+30 XP`.
   - 🎳 **10-Pin Bowling Alley (`34, 28`)**: Roll the bowling ball down the hardwood lane to knock down all 10 3D pins.
