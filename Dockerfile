@@ -12,14 +12,14 @@ COPY frontend/package*.json ./frontend/
 COPY backend/package*.json ./backend/
 
 # Install frontend dependencies and build frontend
-RUN --mount=type=cache,target=/root/.npm \
+RUN --mount=type=cache,id=npm,target=/root/.npm \
     cd frontend && npm ci
 COPY shared ./shared
 COPY frontend ./frontend
 RUN cd frontend && npm run build
 
 # Install backend dependencies and build backend
-RUN --mount=type=cache,target=/root/.npm \
+RUN --mount=type=cache,id=npm,target=/root/.npm \
     cd backend && npm ci
 COPY backend ./backend
 RUN cd backend && npm run build
@@ -37,7 +37,7 @@ ENV NODE_ENV=production \
 
 # Install only production dependencies for backend (utilizing npm cache from builder)
 COPY backend/package*.json ./backend/
-RUN --mount=type=cache,target=/root/.npm \
+RUN --mount=type=cache,id=npm,target=/root/.npm \
     cd backend && npm ci --omit=dev
 
 # Copy compiled artifacts from builder
