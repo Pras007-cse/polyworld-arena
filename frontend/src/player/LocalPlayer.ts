@@ -4,6 +4,18 @@ import { WORLD_CONSTANTS } from '@shared/constants/world';
 import { InputState } from '../systems/InputManager';
 import { soundManager } from '../systems/SoundManager';
 
+export interface MountedInfo {
+  kind: 'bus' | 'car' | 'boat' | 'plane' | 'heli' | 'skytrain' | 'seesaw' | 'carousel' | 'swing' | 'ferris';
+  seatIndex?: number;
+  side?: number;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  ref?: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  mount?: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  gondola?: any;
+}
+
 export class LocalPlayer {
   public id: string;
   public mesh: THREE.Group;
@@ -20,9 +32,20 @@ export class LocalPlayer {
   public dashCooldown: number = 0;
   public speedBoostTimer: number = 0;
 
+  // Gadgets, Mounts & Shop Perks
+  public mountedInfo: MountedInfo | null = null;
+  public jetpackActive: boolean = false;
+  public hoverboardActive: boolean = false;
+  public isGliding: boolean = false;
+  public perkSpeedBoots: boolean = false;
+  public perkMoonJump: boolean = false;
+  public perkRainbowTrail: boolean = false;
+  public lastSlopeLaunchVel: number = 0;
+  public portalCooldown: number = 0;
+
   // Articulated 3D Body Parts
-  private bodyGroup!: THREE.Group;
-  private headGroup!: THREE.Group;
+  public bodyGroup!: THREE.Group;
+  public headGroup!: THREE.Group;
   private torsoMesh!: THREE.Mesh;
   private leftArmGroup!: THREE.Group;
   private rightArmGroup!: THREE.Group;
@@ -32,6 +55,9 @@ export class LocalPlayer {
   private rightEyeMesh!: THREE.Mesh;
   private crownMesh!: THREE.Group;
   private auraRing!: THREE.Mesh;
+  public jetpackMesh!: THREE.Group;
+  public gliderMesh!: THREE.Group;
+  public hoverboardMesh!: THREE.Group;
   private nameplateSprite!: THREE.Sprite;
   private chatSprite: THREE.Sprite | null = null;
   private chatTimeout: number | null = null;
@@ -59,7 +85,10 @@ export class LocalPlayer {
     this.updateNameplate();
   }
 
-  private buildCharacterMesh() {
+  public buildCharacterMesh() {
+    while (this.mesh.children.length > 0) {
+      this.mesh.remove(this.mesh.children[0]);
+    }
     this.bodyGroup = new THREE.Group();
     this.mesh.add(this.bodyGroup);
 
@@ -88,7 +117,6 @@ export class LocalPlayer {
       emissiveIntensity: 0.35,
     });
 
-    // Ground aura ring
     const auraGeo = new THREE.RingGeometry(0.48, 0.62, 24);
     auraGeo.rotateX(-Math.PI / 2);
     const auraMat = new THREE.MeshBasicMaterial({
@@ -101,7 +129,6 @@ export class LocalPlayer {
     this.auraRing.position.y = 0.03;
     this.mesh.add(this.auraRing);
 
-    // Torso
     const torsoGeo = new THREE.BoxGeometry(0.72, 0.82, 0.44);
     this.torsoMesh = new THREE.Mesh(torsoGeo, shirtMat);
     this.torsoMesh.position.y = 1.12;
@@ -109,7 +136,6 @@ export class LocalPlayer {
     this.torsoMesh.receiveShadow = true;
     this.bodyGroup.add(this.torsoMesh);
 
-    // Belt / Waist trim
     const beltMesh = new THREE.Mesh(
       new THREE.BoxGeometry(0.74, 0.1, 0.46),
       new THREE.MeshStandardMaterial({ color: 0x1e293b, metalness: 0.5, roughness: 0.4 })
@@ -117,7 +143,6 @@ export class LocalPlayer {
     beltMesh.position.set(0, -0.35, 0);
     this.torsoMesh.add(beltMesh);
 
-    // Adventurer Backpack / Cape detail
     if (this.appearance.avatarType === 'athletic' || this.appearance.avatarType === 'casual') {
       const pack = new THREE.Mesh(
         new THREE.BoxGeometry(0.48, 0.52, 0.22),
@@ -128,7 +153,6 @@ export class LocalPlayer {
       this.torsoMesh.add(pack);
     }
 
-    // Head Group (pivots at neck)
     this.headGroup = new THREE.Group();
     this.headGroup.position.set(0, 1.82, 0);
     this.bodyGroup.add(this.headGroup);
@@ -138,12 +162,10 @@ export class LocalPlayer {
     headMesh.castShadow = true;
     this.headGroup.add(headMesh);
 
-    // Stylized Hair
     const hairTop = new THREE.Mesh(new THREE.BoxGeometry(0.62, 0.2, 0.62), hairMat);
     hairTop.position.set(0, 0.24, -0.02);
     this.headGroup.add(hairTop);
 
-    // Eyes (with blink scaling)
     const eyeWhiteGeo = new THREE.BoxGeometry(0.11, 0.12, 0.03);
     const leftWhite = new THREE.Mesh(eyeWhiteGeo, eyeWhiteMat);
     leftWhite.position.set(-0.14, 0.02, 0.28);
@@ -158,10 +180,8 @@ export class LocalPlayer {
 
     this.headGroup.add(leftWhite, rightWhite, this.leftEyeMesh, this.rightEyeMesh);
 
-    // Custom Accessory
     this.buildAccessory(this.appearance.accessory || 'none', goldMat);
 
-    // Floating Golden Arena Crown (visible when player holds the Arena Crown)
     this.crownMesh = new THREE.Group();
     const crownBase = new THREE.Mesh(new THREE.CylinderGeometry(0.28, 0.24, 0.18, 8), goldMat);
     this.crownMesh.add(crownBase);
@@ -175,7 +195,6 @@ export class LocalPlayer {
     this.crownMesh.visible = this.hasCrown || this.appearance.accessory === 'crown';
     this.headGroup.add(this.crownMesh);
 
-    // Arms
     const armGeo = new THREE.BoxGeometry(0.24, 0.68, 0.24);
     armGeo.translate(0, -0.28, 0);
     const handGeo = new THREE.BoxGeometry(0.2, 0.2, 0.2);
@@ -197,6 +216,58 @@ export class LocalPlayer {
     rightHand.position.set(0, -0.64, 0);
     this.rightArmGroup.add(rightArm, rightHand);
     this.bodyGroup.add(this.rightArmGroup);
+
+    // 3D Jetpack Thrusters
+    this.jetpackMesh = new THREE.Group();
+    const jpMat = new THREE.MeshStandardMaterial({ color: 0x94a3b8, metalness: 0.8, roughness: 0.2 });
+    const jpGlow = new THREE.MeshBasicMaterial({ color: 0x38bdf8 });
+    [-0.18, 0.18].forEach((jx) => {
+      const cyl = new THREE.Mesh(new THREE.CylinderGeometry(0.11, 0.13, 0.58, 10), jpMat);
+      cyl.position.set(jx, 1.15, -0.34);
+      const noz = new THREE.Mesh(new THREE.ConeGeometry(0.1, 0.2, 8), jpGlow);
+      noz.position.set(jx, 0.82, -0.34);
+      this.jetpackMesh.add(cyl, noz);
+    });
+    this.jetpackMesh.visible = this.jetpackActive;
+    this.bodyGroup.add(this.jetpackMesh);
+
+    // 3D Hang-Glider Parachute Canopy
+    this.gliderMesh = new THREE.Group();
+    const wingMat = new THREE.MeshStandardMaterial({
+      color: 0x06b6d4,
+      emissive: 0x0284c7,
+      emissiveIntensity: 0.4,
+      side: THREE.DoubleSide,
+    });
+    const wLeft = new THREE.Mesh(new THREE.BoxGeometry(2.1, 0.06, 1.1), wingMat);
+    wLeft.position.set(-0.95, 2.55, -0.1);
+    wLeft.rotation.z = 0.15;
+    const wRight = new THREE.Mesh(new THREE.BoxGeometry(2.1, 0.06, 1.1), wingMat);
+    wRight.position.set(0.95, 2.55, -0.1);
+    wRight.rotation.z = -0.15;
+    const barL = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.025, 1.1, 6), jpMat);
+    barL.position.set(-0.45, 2.0, 0.15);
+    const barR = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.025, 1.1, 6), jpMat);
+    barR.position.set(0.45, 2.0, 0.15);
+    this.gliderMesh.add(wLeft, wRight, barL, barR);
+    this.gliderMesh.visible = false;
+    this.bodyGroup.add(this.gliderMesh);
+
+    // 3D Street Hoverboard Deck
+    this.hoverboardMesh = new THREE.Group();
+    const hbDeck = new THREE.Mesh(
+      new THREE.BoxGeometry(0.85, 0.1, 1.95),
+      new THREE.MeshStandardMaterial({
+        color: 0xec4899,
+        emissive: 0xdb2777,
+        emissiveIntensity: 0.5,
+        metalness: 0.6,
+      })
+    );
+    hbDeck.position.y = 0.08;
+    this.hoverboardMesh.add(hbDeck);
+    this.hoverboardMesh.visible = this.hoverboardActive;
+    this.mesh.add(this.hoverboardMesh);
 
     // Legs
     const legGeo = new THREE.BoxGeometry(0.28, 0.68, 0.28);
@@ -256,10 +327,7 @@ export class LocalPlayer {
       bill.position.set(0, 0.2, 0.32);
       this.headGroup.add(bill);
     } else if (type === 'halo') {
-      const halo = new THREE.Mesh(
-        new THREE.TorusGeometry(0.34, 0.045, 12, 24),
-        goldMat
-      );
+      const halo = new THREE.Mesh(new THREE.TorusGeometry(0.34, 0.045, 12, 24), goldMat);
       halo.rotation.x = Math.PI / 2;
       halo.position.set(0, 0.56, 0);
       this.headGroup.add(halo);
@@ -275,16 +343,16 @@ export class LocalPlayer {
     canvas.height = 80;
     const ctx = canvas.getContext('2d');
     if (ctx) {
-      ctx.fillStyle = 'rgba(15, 23, 42, 0.82)';
+      ctx.fillStyle = 'rgba(15, 23, 42, 0.84)';
       ctx.beginPath();
-      ctx.roundRect(12, 14, 296, 52, 16);
+      ctx.roundRect(10, 14, 300, 52, 16);
       ctx.fill();
       ctx.strokeStyle = this.hasCrown ? '#facc15' : 'rgba(148, 163, 184, 0.45)';
       ctx.lineWidth = this.hasCrown ? 3 : 2;
       ctx.stroke();
 
       const label = `${this.hasCrown ? '👑 ' : ''}${this.username} • Lv.${this.level}`;
-      ctx.font = 'bold 21px "Plus Jakarta Sans", sans-serif';
+      ctx.font = 'bold 20px "Plus Jakarta Sans", sans-serif';
       ctx.fillStyle = '#ffffff';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
@@ -326,7 +394,7 @@ export class LocalPlayer {
       ctx.lineWidth = 3;
       ctx.stroke();
 
-      ctx.font = '600 20px "Plus Jakarta Sans", sans-serif';
+      ctx.font = '600 19px "Plus Jakarta Sans", sans-serif';
       ctx.fillStyle = '#0f172a';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
@@ -337,7 +405,7 @@ export class LocalPlayer {
     const texture = new THREE.CanvasTexture(canvas);
     const mat = new THREE.SpriteMaterial({ map: texture, transparent: true, depthTest: false });
     this.chatSprite = new THREE.Sprite(mat);
-    this.chatSprite.scale.set(2.9, 0.72, 1);
+    this.chatSprite.scale.set(2.8, 0.7, 1);
     this.chatSprite.position.set(0, 3.2, 0);
     this.mesh.add(this.chatSprite);
 
@@ -355,8 +423,16 @@ export class LocalPlayer {
     cameraYaw: number,
     collisionBoxes: THREE.Box3[],
     jumpPads: THREE.Vector3[] = [],
-    speedRings: THREE.Vector3[] = []
+    speedRings: THREE.Vector3[] = [],
+    getSlopeHeight: (x: number, z: number, currentY?: number) => number = () => 0,
+    isForbiddenWaterForLand: (x: number, z: number) => boolean = () => false
   ) {
+    if (this.mountedInfo) {
+      this.currentAnimation = 'sit';
+      this.animateRig(delta);
+      return;
+    }
+
     if (this.dashCooldown > 0) this.dashCooldown = Math.max(0, this.dashCooldown - delta);
     if (this.speedBoostTimer > 0) this.speedBoostTimer = Math.max(0, this.speedBoostTimer - delta);
 
@@ -365,15 +441,16 @@ export class LocalPlayer {
     const isMoving = hasKeyMove || hasJoyMove;
 
     if (input.dash && this.dashCooldown <= 0) {
-      this.dashCooldown = 1.6;
+      this.dashCooldown = 1.4;
       this.speedBoostTimer = 0.45;
       soundManager.playDash();
     }
 
     let baseSpeed = input.sprint ? WORLD_CONSTANTS.RUN_SPEED : WORLD_CONSTANTS.WALK_SPEED;
-    if (this.speedBoostTimer > 0) {
-      baseSpeed = WORLD_CONSTANTS.DASH_SPEED;
-    }
+    if (this.speedBoostTimer > 0) baseSpeed = WORLD_CONSTANTS.DASH_SPEED;
+    if (this.hoverboardActive) baseSpeed *= 1.55;
+    if (this.perkSpeedBoots) baseSpeed *= 1.32;
+    if (this.isGliding) baseSpeed = Math.max(baseSpeed, 18.5);
 
     const moveDir = new THREE.Vector3();
     if (input.forward) moveDir.z -= 1;
@@ -403,14 +480,27 @@ export class LocalPlayer {
       this.velocity.z = THREE.MathUtils.lerp(this.velocity.z, 0, Math.min(1, delta * 14));
     }
 
-    // Jump
     if (input.jump && this.isGrounded) {
-      this.velocity.y = WORLD_CONSTANTS.JUMP_FORCE;
+      this.velocity.y = WORLD_CONSTANTS.JUMP_FORCE * (this.perkMoonJump ? 1.35 : 1.0);
       this.isGrounded = false;
       soundManager.playJump();
     }
 
-    // Jump pads check
+    if (this.jetpackActive && input.jump) {
+      this.velocity.y = Math.min(15.0, this.velocity.y + 42.0 * delta);
+      this.isGrounded = false;
+    }
+
+    if (!this.isGrounded && !this.jetpackActive && this.position.y > 2.8 && input.jump && this.velocity.y < -0.5) {
+      this.isGliding = true;
+      this.velocity.y = Math.max(this.velocity.y, -3.2);
+    } else {
+      this.isGliding = false;
+    }
+    if (this.gliderMesh) this.gliderMesh.visible = this.isGliding;
+    if (this.jetpackMesh) this.jetpackMesh.visible = this.jetpackActive;
+    if (this.hoverboardMesh) this.hoverboardMesh.visible = this.hoverboardActive;
+
     for (const pad of jumpPads) {
       const dx = this.position.x - pad.x;
       const dz = this.position.z - pad.z;
@@ -422,7 +512,6 @@ export class LocalPlayer {
       }
     }
 
-    // Speed Boost Rings check
     for (const ring of speedRings) {
       const dx = this.position.x - ring.x;
       const dz = this.position.z - ring.z;
@@ -433,24 +522,57 @@ export class LocalPlayer {
       }
     }
 
-    this.velocity.y += WORLD_CONSTANTS.GRAVITY * delta;
-
-    const wasAirborne = !this.isGrounded;
+    const prevSlopeY = getSlopeHeight(this.position.x, this.position.z, this.position.y);
     const nextPos = this.position.clone();
     nextPos.x += this.velocity.x * delta;
     nextPos.z += this.velocity.z * delta;
-    nextPos.y += this.velocity.y * delta;
 
-    if (nextPos.y <= 0) {
-      nextPos.y = 0;
-      this.velocity.y = 0;
-      this.isGrounded = true;
-      if (wasAirborne) {
-        this.landSquash = 0.25;
+    if (this.position.y < 1.5 && isForbiddenWaterForLand(nextPos.x, nextPos.z)) {
+      if (!isForbiddenWaterForLand(nextPos.x, this.position.z)) {
+        nextPos.z = this.position.z;
+        this.velocity.z = 0;
+      } else if (!isForbiddenWaterForLand(this.position.x, nextPos.z)) {
+        nextPos.x = this.position.x;
+        this.velocity.x = 0;
+      } else {
+        nextPos.x = this.position.x;
+        nextPos.z = this.position.z;
+        this.velocity.x = 0;
+        this.velocity.z = 0;
       }
     }
 
-    // Collision check with sliding
+    const slopeY = getSlopeHeight(nextPos.x, nextPos.z, this.position.y);
+    const wasAirborne = !this.isGrounded;
+
+    if (this.isGrounded) {
+      const climbRate = (slopeY - prevSlopeY) / Math.max(0.005, delta);
+      if (climbRate > 0) {
+        this.lastSlopeLaunchVel = Math.min(14.0, climbRate * 1.15);
+      } else if (prevSlopeY > slopeY + 0.45 && this.lastSlopeLaunchVel > 1.5) {
+        this.velocity.y = Math.max(this.velocity.y, this.lastSlopeLaunchVel + 3.5);
+        this.isGrounded = false;
+        this.lastSlopeLaunchVel = 0;
+      } else {
+        this.lastSlopeLaunchVel = THREE.MathUtils.lerp(this.lastSlopeLaunchVel, 0, delta * 6);
+      }
+    }
+
+    this.velocity.y += WORLD_CONSTANTS.GRAVITY * delta;
+    nextPos.y += this.velocity.y * delta;
+
+    if (nextPos.y <= slopeY) {
+      nextPos.y = slopeY;
+      this.velocity.y = 0;
+      this.isGrounded = true;
+      if (wasAirborne) this.landSquash = 0.25;
+    } else if (this.isGrounded && nextPos.y - slopeY <= 0.28 && this.velocity.y <= 0) {
+      nextPos.y = slopeY;
+      this.velocity.y = 0;
+    } else {
+      this.isGrounded = false;
+    }
+
     const playerRadius = 0.45;
     const playerBox = new THREE.Box3(
       new THREE.Vector3(nextPos.x - playerRadius, nextPos.y + 0.1, nextPos.z - playerRadius),
@@ -459,7 +581,6 @@ export class LocalPlayer {
 
     for (const box of collisionBoxes) {
       if (playerBox.intersectsBox(box)) {
-        // Allow standing on top of roofs/platforms
         if (this.position.y >= box.max.y - 0.35 && this.velocity.y <= 0) {
           nextPos.y = box.max.y;
           this.velocity.y = 0;
@@ -495,7 +616,6 @@ export class LocalPlayer {
     this.position.copy(nextPos);
     this.mesh.position.copy(this.position);
 
-    // Determine animation state
     if (!this.isGrounded) {
       this.currentAnimation = 'jump';
     } else if (isMoving) {
@@ -513,29 +633,25 @@ export class LocalPlayer {
     this.animTime += delta;
     this.blinkTimer += delta;
 
-    // Periodic eye blink
     const isBlinking = this.blinkTimer % 3.6 > 3.45;
     const eyeScaleY = isBlinking ? 0.15 : 1.0;
     this.leftEyeMesh.scale.y = eyeScaleY;
     this.rightEyeMesh.scale.y = eyeScaleY;
 
-    // Landing squash recovery
     if (this.landSquash > 0) {
       this.landSquash = Math.max(0, this.landSquash - delta * 2.2);
-      this.bodyGroup.scale.set(1 + this.landSquash * 0.35, 1 - this.landSquash * 0.35, 1 + this.landSquash * 0.35);
+      this.bodyGroup.scale.set(
+        1 + this.landSquash * 0.35,
+        1 - this.landSquash * 0.35,
+        1 + this.landSquash * 0.35
+      );
     } else {
       this.bodyGroup.scale.lerp(new THREE.Vector3(1, 1, 1), delta * 12);
     }
 
-    // Rotate aura ring & crown
-    if (this.auraRing) {
-      this.auraRing.rotation.z += delta * 1.2;
-    }
-    if (this.crownMesh && this.crownMesh.visible) {
-      this.crownMesh.rotation.y += delta * 2.0;
-    }
+    if (this.auraRing) this.auraRing.rotation.z += delta * 1.2;
+    if (this.crownMesh && this.crownMesh.visible) this.crownMesh.rotation.y += delta * 2.0;
 
-    // Reset default torso/body transforms smoothly
     this.bodyGroup.position.y = THREE.MathUtils.lerp(this.bodyGroup.position.y, 0, delta * 10);
     this.bodyGroup.rotation.x = THREE.MathUtils.lerp(
       this.bodyGroup.rotation.x,
@@ -594,7 +710,6 @@ export class LocalPlayer {
       this.leftArmGroup.rotation.x = -0.35;
       this.rightArmGroup.rotation.x = -0.35;
     } else {
-      // Smooth idle breathing
       const breath = Math.sin(this.animTime * 2.4) * 0.025;
       this.torsoMesh.position.y = 1.12 + breath;
       this.headGroup.position.y = 1.82 + breath;
@@ -602,8 +717,16 @@ export class LocalPlayer {
       this.headGroup.rotation.z = THREE.MathUtils.lerp(this.headGroup.rotation.z, 0, delta * 10);
       this.leftLegGroup.rotation.x = THREE.MathUtils.lerp(this.leftLegGroup.rotation.x, 0, delta * 10);
       this.rightLegGroup.rotation.x = THREE.MathUtils.lerp(this.rightLegGroup.rotation.x, 0, delta * 10);
-      this.leftArmGroup.rotation.x = THREE.MathUtils.lerp(this.leftArmGroup.rotation.x, Math.sin(this.animTime * 1.6) * 0.06, delta * 10);
-      this.rightArmGroup.rotation.x = THREE.MathUtils.lerp(this.rightArmGroup.rotation.x, -Math.sin(this.animTime * 1.6) * 0.06, delta * 10);
+      this.leftArmGroup.rotation.x = THREE.MathUtils.lerp(
+        this.leftArmGroup.rotation.x,
+        Math.sin(this.animTime * 1.6) * 0.06,
+        delta * 10
+      );
+      this.rightArmGroup.rotation.x = THREE.MathUtils.lerp(
+        this.rightArmGroup.rotation.x,
+        -Math.sin(this.animTime * 1.6) * 0.06,
+        delta * 10
+      );
       this.leftArmGroup.rotation.z = THREE.MathUtils.lerp(this.leftArmGroup.rotation.z, 0, delta * 10);
       this.rightArmGroup.rotation.z = THREE.MathUtils.lerp(this.rightArmGroup.rotation.z, 0, delta * 10);
     }

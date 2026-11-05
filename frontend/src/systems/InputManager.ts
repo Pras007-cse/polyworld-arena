@@ -1,4 +1,4 @@
-import { AnimationState } from '@shared/types';
+import { AnimationState, CameraControlMode } from '@shared/types';
 
 export interface InputState {
   forward: boolean;
@@ -15,6 +15,18 @@ export interface InputState {
   cameraZoom: number;
   joyX: number;
   joyY: number;
+}
+
+export interface ActionCallbacks {
+  onInteract?: () => void;
+  onP2Interact?: () => void;
+  onGrapple?: () => void;
+  onBlaster?: () => void;
+  onToggleJetpack?: () => void;
+  onToggleHoverboard?: () => void;
+  onBuildRamp?: () => void;
+  onToggleCameraMode?: () => void;
+  onCycleCameraView?: () => void;
 }
 
 export class InputManager {
@@ -53,7 +65,11 @@ export class InputManager {
   };
 
   public splitScreenEnabled: boolean = false;
+  public cameraControlMode: CameraControlMode = 'drag';
+  public actions: ActionCallbacks = {};
+
   private isPointerDown = false;
+  private hasMouseInit = false;
   private prevMouseX = 0;
   private prevMouseY = 0;
   private element: HTMLElement | null = null;
@@ -94,7 +110,7 @@ export class InputManager {
     this.state.cameraZoom = 0;
   }
 
-  public triggerEmote(emote: AnimationState) {
+  public triggerEmote(emote: AnimationState | null) {
     this.state.emote = emote;
   }
 
@@ -105,7 +121,6 @@ export class InputManager {
     }
 
     switch (e.code) {
-      // Player 1 (WASD)
       case 'KeyW':
         this.state.forward = true;
         this.state.emote = null;
@@ -135,6 +150,33 @@ export class InputManager {
         break;
       case 'KeyE':
         this.state.interact = true;
+        this.actions.onInteract?.();
+        break;
+      case 'KeyU':
+        if (this.splitScreenEnabled) {
+          this.actions.onP2Interact?.();
+        }
+        break;
+      case 'KeyQ':
+        this.actions.onGrapple?.();
+        break;
+      case 'KeyG':
+        this.actions.onBlaster?.();
+        break;
+      case 'KeyJ':
+        this.actions.onToggleJetpack?.();
+        break;
+      case 'KeyH':
+        this.actions.onToggleHoverboard?.();
+        break;
+      case 'KeyB':
+        this.actions.onBuildRamp?.();
+        break;
+      case 'KeyM':
+        this.actions.onToggleCameraMode?.();
+        break;
+      case 'KeyV':
+        this.actions.onCycleCameraView?.();
         break;
       case 'Digit1':
         this.state.emote = 'wave';
@@ -149,7 +191,6 @@ export class InputManager {
         this.state.emote = this.state.emote === 'sit' ? null : 'sit';
         break;
 
-      // Arrow keys / IJKL: route to Player 2 when Split-Screen is active, or Player 1 when single-screen
       case 'ArrowUp':
       case 'KeyI':
         if (this.splitScreenEnabled) {
@@ -174,7 +215,7 @@ export class InputManager {
         break;
       case 'ArrowLeft':
       case 'KeyJ':
-        if (this.splitScreenEnabled) {
+        if (this.splitScreenEnabled && e.code === 'ArrowLeft') {
           this.p2State.left = true;
           this.p2State.emote = null;
         } else if (e.code === 'ArrowLeft') {
@@ -254,9 +295,8 @@ export class InputManager {
         if (e.code === 'ArrowDown') this.state.backward = false;
         break;
       case 'ArrowLeft':
-      case 'KeyJ':
         this.p2State.left = false;
-        if (e.code === 'ArrowLeft') this.state.left = false;
+        this.state.left = false;
         break;
       case 'ArrowRight':
       case 'KeyL':
@@ -288,11 +328,23 @@ export class InputManager {
   }
 
   private onMouseMove(e: MouseEvent) {
-    if (this.isPointerDown) {
-      const dx = e.clientX - this.prevMouseX;
-      const dy = e.clientY - this.prevMouseY;
+    if (!this.hasMouseInit) {
       this.prevMouseX = e.clientX;
       this.prevMouseY = e.clientY;
+      this.hasMouseInit = true;
+      return;
+    }
+    const dx = e.clientX - this.prevMouseX;
+    const dy = e.clientY - this.prevMouseY;
+    this.prevMouseX = e.clientX;
+    this.prevMouseY = e.clientY;
+
+    const tag = (e.target as HTMLElement)?.tagName;
+    if (tag === 'INPUT' || tag === 'SELECT' || tag === 'BUTTON' || tag === 'TEXTAREA') {
+      return;
+    }
+
+    if (this.isPointerDown || this.cameraControlMode === 'mouse_move') {
       this.state.cameraDeltaX += dx;
       this.state.cameraDeltaY += dy;
     }

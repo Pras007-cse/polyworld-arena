@@ -39,37 +39,46 @@ export class SoundManager {
   }
 
   public playJump() {
-    this.playTone(240, 0.18, 'sine', 0.09, 540);
+    this.playTone(230, 0.16, 'sine', 0.08, 520);
   }
 
   public playJumpPad() {
-    this.playTone(280, 0.35, 'triangle', 0.12, 880);
+    this.playTone(260, 0.35, 'triangle', 0.12, 880);
   }
 
   public playDash() {
-    this.playTone(180, 0.15, 'sawtooth', 0.06, 420);
+    this.playTone(180, 0.14, 'sawtooth', 0.06, 440);
   }
 
   public playCollect(value: number) {
     const base = value >= 50 ? 587.33 : value >= 25 ? 523.25 : 440;
-    this.playTone(base, 0.12, 'triangle', 0.1);
-    setTimeout(() => this.playTone(base * 1.25, 0.14, 'triangle', 0.1), 70);
-    setTimeout(() => this.playTone(base * 1.5, 0.22, 'sine', 0.12), 140);
+    this.playTone(base, 0.11, 'triangle', 0.09);
+    setTimeout(() => this.playTone(base * 1.25, 0.13, 'triangle', 0.09), 65);
+    setTimeout(() => this.playTone(base * 1.5, 0.2, 'sine', 0.11), 130);
   }
 
   public playCrown() {
     [523.25, 659.25, 783.99, 1046.5].forEach((f, idx) => {
-      setTimeout(() => this.playTone(f, 0.18, 'triangle', 0.11), idx * 75);
+      setTimeout(() => this.playTone(f, 0.18, 'triangle', 0.1), idx * 70);
     });
   }
 
   public playChat() {
-    this.playTone(660, 0.08, 'sine', 0.05, 880);
+    this.playTone(680, 0.07, 'sine', 0.05, 860);
   }
 
   public playEmote() {
-    this.playTone(480, 0.12, 'sine', 0.07, 640);
-    setTimeout(() => this.playTone(720, 0.16, 'sine', 0.07), 100);
+    this.playTone(480, 0.1, 'sine', 0.07, 640);
+    setTimeout(() => this.playTone(720, 0.15, 'sine', 0.07), 95);
+  }
+
+  public playHorn() {
+    this.playTone(340, 0.16, 'sawtooth', 0.09);
+    this.playTone(425, 0.16, 'sawtooth', 0.09);
+    setTimeout(() => {
+      this.playTone(340, 0.22, 'sawtooth', 0.09);
+      this.playTone(425, 0.22, 'sawtooth', 0.09);
+    }, 190);
   }
 }
 

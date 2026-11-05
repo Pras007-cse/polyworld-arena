@@ -15,6 +15,10 @@ export type AnimationState =
   | 'sit';
 
 export type AccessoryType = 'none' | 'crown' | 'wizard' | 'visor' | 'cap' | 'halo';
+export type PetType = 'dragon' | 'drone' | 'pup' | 'none';
+export type CameraControlMode = 'drag' | 'mouse_move';
+export type CameraViewMode = 'third_person' | 'first_person' | 'cinematic';
+export type WeatherMode = 'clear' | 'rain' | 'snow' | 'rainbow';
 
 export interface CharacterAppearance {
   color: string;
@@ -22,6 +26,8 @@ export interface CharacterAppearance {
   pantsColor: string;
   avatarType: 'casual' | 'athletic' | 'formal';
   accessory?: AccessoryType;
+  petType?: PetType;
+  cameraControlMode?: CameraControlMode;
 }
 
 export interface PlayerState {
@@ -51,7 +57,21 @@ export interface CollectibleItem {
 
 export interface WorldObjectData {
   id: string;
-  type: 'bench' | 'lamp' | 'fountain' | 'tree' | 'building' | 'sign' | 'jumppad' | 'boost' | 'shrine';
+  type:
+    | 'bench'
+    | 'lamp'
+    | 'fountain'
+    | 'tree'
+    | 'building'
+    | 'sign'
+    | 'jumppad'
+    | 'boost'
+    | 'shrine'
+    | 'vehicle'
+    | 'boat'
+    | 'plane'
+    | 'heli'
+    | 'bus';
   position: Vector3D;
   rotation?: number;
   interactive?: boolean;
